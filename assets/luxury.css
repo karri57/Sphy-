@@ -1282,3 +1282,22 @@ zoom-dialog dialog {
 #MainContent[data-template*="product"] .product-information__media .sticky-content {
   margin-top: 0 !important;
 }
+
+/* ============================================================
+   ICON-ONLY BUTTONS — Reset oversized padding from .button rule
+   ============================================================ */
+
+/* .button.button-unstyled (higher specificity than .button alone) resets
+   the 15px/36px padding that would hide SVG icons in small buttons.
+   Covers: quantity ± buttons, close buttons, header icons, etc. */
+.button.button-unstyled {
+  padding-block: 0 !important;
+  padding-inline: 0 !important;
+}
+
+/* Cart remove button uses .button without .button-unstyled,
+   so target it directly — cascade order ensures this wins. */
+.cart-items__remove {
+  padding-block: 0 !important;
+  padding-inline: 0 !important;
+}
