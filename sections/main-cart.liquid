@@ -45,6 +45,26 @@
       </div>
 
       {%- unless cart.empty? -%}
+        {%- assign lp_threshold = 25000 -%}
+        {%- assign lp_total = cart.total_price -%}
+        {%- if lp_total < lp_threshold -%}
+          {%- assign lp_remaining = lp_threshold | minus: lp_total -%}
+          {%- assign lp_progress = lp_total | times: 100 | divided_by: lp_threshold -%}
+          <div class="lp-ship-bar">
+            <p class="lp-ship-bar__text">Add <strong>{{ lp_remaining | money }}</strong> more for complimentary shipping</p>
+            <div class="lp-ship-bar__track" role="progressbar" aria-valuenow="{{ lp_progress }}" aria-valuemin="0" aria-valuemax="100">
+              <div class="lp-ship-bar__fill" style="width:{{ lp_progress }}%"></div>
+            </div>
+          </div>
+        {%- else -%}
+          <div class="lp-ship-bar lp-ship-bar--unlocked">
+            <p class="lp-ship-bar__text">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Complimentary shipping on your order
+            </p>
+          </div>
+        {%- endif -%}
+
         <div class="cart-page__summary">
           {%- content_for 'block', id: 'cart-page-summary', type: '_cart-summary' -%}
         </div>
