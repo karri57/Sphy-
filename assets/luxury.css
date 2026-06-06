@@ -1301,3 +1301,65 @@ zoom-dialog dialog {
   padding-block: 0 !important;
   padding-inline: 0 !important;
 }
+
+/* ============================================================
+   PASSWORD PAGE — Countdown Timer
+   ============================================================ */
+
+.lp-countdown {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0;
+  margin-block: 4px 16px;
+}
+
+.lp-countdown__unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 72px;
+}
+
+.lp-countdown__number {
+  font-family: 'Cormorant Garamond', 'Times New Roman', Georgia, serif !important;
+  font-size: 3rem !important;
+  font-weight: 300 !important;
+  letter-spacing: 0.04em !important;
+  line-height: 1 !important;
+  color: #FDFAF6 !important;
+}
+
+.lp-countdown__label {
+  font-family: 'Jost', 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+  font-size: 0.58rem !important;
+  letter-spacing: 0.2em !important;
+  text-transform: uppercase !important;
+  font-weight: 400 !important;
+  color: rgba(253, 250, 246, 0.6) !important;
+  margin-top: 8px !important;
+}
+
+.lp-countdown__sep {
+  font-family: 'Cormorant Garamond', 'Times New Roman', Georgia, serif !important;
+  font-size: 2.4rem !important;
+  font-weight: 300 !important;
+  line-height: 1 !important;
+  color: rgba(253, 250, 246, 0.4) !important;
+  padding-inline: 6px !important;
+}
+
+@media screen and (max-width: 749px) {
+  .lp-countdown__unit {
+    min-width: 54px;
+  }
+
+  .lp-countdown__number {
+    font-size: 2.2rem !important;
+  }
+
+  .lp-countdown__sep {
+    font-size: 1.8rem !important;
+    padding-inline: 4px !important;
+  }
+}
