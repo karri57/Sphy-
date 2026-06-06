@@ -1,0 +1,1164 @@
+/* ============================================================
+   LUXURY REDESIGN — Inspired by Loro Piana
+   Clean, minimal, sophisticated Italian luxury aesthetic
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:ital,wght@0,200;0,300;0,400;0,500;1,300&display=swap');
+
+/* ============================================================
+   LUXURY DESIGN TOKENS
+   ============================================================ */
+:root {
+  --lp-ivory:        #FDFAF6;
+  --lp-cream:        #F5F0E8;
+  --lp-beige:        #EDE5D8;
+  --lp-sand:         #D4C9BB;
+  --lp-taupe:        #8C7A6B;
+  --lp-bronze:       #B8A082;
+  --lp-charcoal:     #1C1917;
+  --lp-dark:         #2A2520;
+  --lp-border-light: #E5DDD3;
+  --lp-border-mid:   #D0C8BC;
+  --lp-text-muted:   #6B5D52;
+
+  --lp-font-serif: 'Cormorant Garamond', 'Times New Roman', Georgia, serif;
+  --lp-font-sans:  'Jost', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+  /* Override theme font CSS variables */
+  --font-body--family:       'Jost', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-subheading--family: 'Jost', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-heading--family:    'Cormorant Garamond', 'Times New Roman', Georgia, serif;
+  --font-accent--family:     'Cormorant Garamond', 'Times New Roman', Georgia, serif;
+  --font-paragraph--family:  'Jost', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-h1--family:         'Cormorant Garamond', 'Times New Roman', Georgia, serif;
+  --font-h2--family:         'Cormorant Garamond', 'Times New Roman', Georgia, serif;
+  --font-h3--family:         'Cormorant Garamond', 'Times New Roman', Georgia, serif;
+  --font-h4--family:         'Cormorant Garamond', 'Times New Roman', Georgia, serif;
+  --font-h5--family:         'Jost', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-h6--family:         'Jost', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+  /* Refined animation timing */
+  --animation-speed:            0.3s;
+  --animation-speed-slow:       0.45s;
+  --hover-transition-duration:  0.5s;
+  --surface-transition-duration:0.4s;
+
+  /* Zero border radii for sharp luxury look */
+  --style-border-radius-buttons-primary:   0px;
+  --style-border-radius-buttons-secondary: 0px;
+  --style-border-radius-inputs:            0px;
+  --style-border-radius-popover:           0px;
+  --border-radius-sm:                      0px;
+}
+
+/* ============================================================
+   COLOR SCHEME OVERRIDES — LUXURY WARM PALETTE
+   ============================================================ */
+
+/* Scheme 1 — Primary: Warm Ivory */
+:root,
+.color-scheme-1 {
+  --color-background:                       #FDFAF6;
+  --color-background-rgb:                   253 250 246;
+  --color-foreground:                       #2A2520;
+  --color-foreground-rgb:                   42 37 32;
+  --color-foreground-heading:               #1C1917;
+  --color-foreground-heading-rgb:           28 25 23;
+  --color-primary:                          #1C1917;
+  --color-primary-hover:                    #6B5D52;
+  --color-border:                           #E5DDD3;
+  --color-border-rgb:                       229 221 211;
+  --color-shadow:                           #1C1917;
+  --color-shadow-rgb:                       28 25 23;
+  --color-primary-button-background:        #1C1917;
+  --color-primary-button-text:              #FDFAF6;
+  --color-primary-button-border:            #1C1917;
+  --color-primary-button-hover-background:  transparent;
+  --color-primary-button-hover-text:        #1C1917;
+  --color-primary-button-hover-border:      #1C1917;
+  --color-secondary-button-background:      transparent;
+  --color-secondary-button-text:            #1C1917;
+  --color-secondary-button-border:          #1C1917;
+  --color-secondary-button-hover-background:#1C1917;
+  --color-secondary-button-hover-text:      #FDFAF6;
+  --color-secondary-button-hover-border:    #1C1917;
+  --color-input-background:                 transparent;
+  --color-input-text:                       #2A2520;
+  --color-input-text-rgb:                   42 37 32;
+  --color-input-border:                     #D0C8BC;
+  --color-input-hover-background:           #F5F0E8;
+  --color-variant-background:               transparent;
+  --color-variant-text:                     #1C1917;
+  --color-variant-text-rgb:                 28 25 23;
+  --color-variant-border:                   #D0C8BC;
+  --color-variant-hover-background:         #EDE5D8;
+  --color-variant-hover-text:               #1C1917;
+  --color-variant-hover-border:             #1C1917;
+  --color-selected-variant-background:      #1C1917;
+  --color-selected-variant-text:            #FDFAF6;
+  --color-selected-variant-border:          #1C1917;
+  --color-selected-variant-hover-background:#2A2520;
+  --color-selected-variant-hover-text:      #FDFAF6;
+  --color-selected-variant-hover-border:    #2A2520;
+}
+
+/* Scheme 2 — Warm Cream */
+.color-scheme-2 {
+  --color-background:                       #F5F0E8;
+  --color-background-rgb:                   245 240 232;
+  --color-foreground:                       #2A2520;
+  --color-foreground-rgb:                   42 37 32;
+  --color-foreground-heading:               #1C1917;
+  --color-foreground-heading-rgb:           28 25 23;
+  --color-primary:                          #1C1917;
+  --color-primary-hover:                    #6B5D52;
+  --color-border:                           #DDD6CA;
+  --color-border-rgb:                       221 214 202;
+  --color-shadow:                           #1C1917;
+  --color-shadow-rgb:                       28 25 23;
+  --color-primary-button-background:        #1C1917;
+  --color-primary-button-text:              #FDFAF6;
+  --color-primary-button-border:            #1C1917;
+  --color-primary-button-hover-background:  transparent;
+  --color-primary-button-hover-text:        #1C1917;
+  --color-primary-button-hover-border:      #1C1917;
+  --color-secondary-button-background:      transparent;
+  --color-secondary-button-text:            #1C1917;
+  --color-secondary-button-border:          #1C1917;
+  --color-secondary-button-hover-background:#1C1917;
+  --color-secondary-button-hover-text:      #F5F0E8;
+  --color-secondary-button-hover-border:    #1C1917;
+  --color-input-background:                 #FDFAF6;
+  --color-input-text:                       #2A2520;
+  --color-input-text-rgb:                   42 37 32;
+  --color-input-border:                     #C8C0B4;
+  --color-input-hover-background:           #EDE5D8;
+  --color-variant-background:               #FDFAF6;
+  --color-variant-text:                     #1C1917;
+  --color-variant-text-rgb:                 28 25 23;
+  --color-variant-border:                   #DDD6CA;
+  --color-variant-hover-background:         #EDE5D8;
+  --color-variant-hover-text:               #1C1917;
+  --color-variant-hover-border:             #1C1917;
+  --color-selected-variant-background:      #1C1917;
+  --color-selected-variant-text:            #FDFAF6;
+  --color-selected-variant-border:          #1C1917;
+  --color-selected-variant-hover-background:#2A2520;
+  --color-selected-variant-hover-text:      #FDFAF6;
+  --color-selected-variant-hover-border:    #2A2520;
+}
+
+/* Scheme 3 — Warm Sand / Greige */
+.color-scheme-3 {
+  --color-background:                       #EDE5D8;
+  --color-background-rgb:                   237 229 216;
+  --color-foreground:                       #2A2520;
+  --color-foreground-rgb:                   42 37 32;
+  --color-foreground-heading:               #1C1917;
+  --color-foreground-heading-rgb:           28 25 23;
+  --color-primary:                          #1C1917;
+  --color-primary-hover:                    #6B5D52;
+  --color-border:                           #C8C0B4;
+  --color-border-rgb:                       200 192 180;
+  --color-shadow:                           #1C1917;
+  --color-shadow-rgb:                       28 25 23;
+  --color-primary-button-background:        #1C1917;
+  --color-primary-button-text:              #FDFAF6;
+  --color-primary-button-border:            #1C1917;
+  --color-primary-button-hover-background:  transparent;
+  --color-primary-button-hover-text:        #1C1917;
+  --color-primary-button-hover-border:      #1C1917;
+  --color-secondary-button-background:      transparent;
+  --color-secondary-button-text:            #1C1917;
+  --color-secondary-button-border:          #1C1917;
+  --color-secondary-button-hover-background:#1C1917;
+  --color-secondary-button-hover-text:      #EDE5D8;
+  --color-secondary-button-hover-border:    #1C1917;
+  --color-input-background:                 #F5F0E8;
+  --color-input-text:                       #2A2520;
+  --color-input-text-rgb:                   42 37 32;
+  --color-input-border:                     #B8B0A4;
+  --color-input-hover-background:           #D4C9BB;
+  --color-variant-background:               #F5F0E8;
+  --color-variant-text:                     #1C1917;
+  --color-variant-text-rgb:                 28 25 23;
+  --color-variant-border:                   #C8C0B4;
+  --color-variant-hover-background:         #D4C9BB;
+  --color-variant-hover-text:               #1C1917;
+  --color-variant-hover-border:             #1C1917;
+  --color-selected-variant-background:      #1C1917;
+  --color-selected-variant-text:            #FDFAF6;
+  --color-selected-variant-border:          #1C1917;
+  --color-selected-variant-hover-background:#2A2520;
+  --color-selected-variant-hover-text:      #FDFAF6;
+  --color-selected-variant-hover-border:    #2A2520;
+}
+
+/* Scheme 4 — Warm Taupe */
+.color-scheme-4 {
+  --color-background:                       #D4C9BB;
+  --color-background-rgb:                   212 201 187;
+  --color-foreground:                       #1C1917;
+  --color-foreground-rgb:                   28 25 23;
+  --color-foreground-heading:               #1C1917;
+  --color-foreground-heading-rgb:           28 25 23;
+  --color-primary:                          #1C1917;
+  --color-primary-hover:                    #2A2520;
+  --color-border:                           #B8B0A4;
+  --color-border-rgb:                       184 176 164;
+  --color-shadow:                           #1C1917;
+  --color-shadow-rgb:                       28 25 23;
+  --color-primary-button-background:        #1C1917;
+  --color-primary-button-text:              #FDFAF6;
+  --color-primary-button-border:            #1C1917;
+  --color-primary-button-hover-background:  transparent;
+  --color-primary-button-hover-text:        #1C1917;
+  --color-primary-button-hover-border:      #1C1917;
+  --color-secondary-button-background:      transparent;
+  --color-secondary-button-text:            #1C1917;
+  --color-secondary-button-border:          #1C1917;
+  --color-secondary-button-hover-background:#1C1917;
+  --color-secondary-button-hover-text:      #FDFAF6;
+  --color-secondary-button-hover-border:    #1C1917;
+  --color-input-background:                 #EDE5D8;
+  --color-input-text:                       #1C1917;
+  --color-input-text-rgb:                   28 25 23;
+  --color-input-border:                     #A8A09A;
+  --color-input-hover-background:           #C8BEB0;
+  --color-variant-background:               #EDE5D8;
+  --color-variant-text:                     #1C1917;
+  --color-variant-text-rgb:                 28 25 23;
+  --color-variant-border:                   #B8B0A4;
+  --color-variant-hover-background:         #C8BEB0;
+  --color-variant-hover-text:               #1C1917;
+  --color-variant-hover-border:             #1C1917;
+  --color-selected-variant-background:      #1C1917;
+  --color-selected-variant-text:            #FDFAF6;
+  --color-selected-variant-border:          #1C1917;
+  --color-selected-variant-hover-background:#2A2520;
+  --color-selected-variant-hover-text:      #FDFAF6;
+  --color-selected-variant-hover-border:    #2A2520;
+}
+
+/* Scheme 5 — Deep Charcoal (inverse/dark) */
+.color-scheme-5 {
+  --color-background:                       #1C1917;
+  --color-background-rgb:                   28 25 23;
+  --color-foreground:                       #E5DDD3;
+  --color-foreground-rgb:                   229 221 211;
+  --color-foreground-heading:               #FDFAF6;
+  --color-foreground-heading-rgb:           253 250 246;
+  --color-primary:                          #E5DDD3;
+  --color-primary-hover:                    #B8A082;
+  --color-border:                           #3A3530;
+  --color-border-rgb:                       58 53 48;
+  --color-shadow:                           #000000;
+  --color-shadow-rgb:                       0 0 0;
+  --color-primary-button-background:        #FDFAF6;
+  --color-primary-button-text:              #1C1917;
+  --color-primary-button-border:            #FDFAF6;
+  --color-primary-button-hover-background:  transparent;
+  --color-primary-button-hover-text:        #FDFAF6;
+  --color-primary-button-hover-border:      #FDFAF6;
+  --color-secondary-button-background:      transparent;
+  --color-secondary-button-text:            #E5DDD3;
+  --color-secondary-button-border:          #E5DDD3;
+  --color-secondary-button-hover-background:#E5DDD3;
+  --color-secondary-button-hover-text:      #1C1917;
+  --color-secondary-button-hover-border:    #E5DDD3;
+  --color-input-background:                 #2A2520;
+  --color-input-text:                       #E5DDD3;
+  --color-input-text-rgb:                   229 221 211;
+  --color-input-border:                     #3A3530;
+  --color-input-hover-background:           #2A2520;
+  --color-variant-background:               #2A2520;
+  --color-variant-text:                     #E5DDD3;
+  --color-variant-text-rgb:                 229 221 211;
+  --color-variant-border:                   #3A3530;
+  --color-variant-hover-background:         #3A3530;
+  --color-variant-hover-text:               #FDFAF6;
+  --color-variant-hover-border:             #E5DDD3;
+  --color-selected-variant-background:      #FDFAF6;
+  --color-selected-variant-text:            #1C1917;
+  --color-selected-variant-border:          #FDFAF6;
+  --color-selected-variant-hover-background:#E5DDD3;
+  --color-selected-variant-hover-text:      #1C1917;
+  --color-selected-variant-hover-border:    #E5DDD3;
+}
+
+/* Scheme 6 — Transparent (hero overlays) */
+.color-scheme-6 {
+  --color-background:                       transparent;
+  --color-background-rgb:                   0 0 0;
+  --color-foreground:                       #F5F0E8;
+  --color-foreground-rgb:                   245 240 232;
+  --color-foreground-heading:               #FDFAF6;
+  --color-foreground-heading-rgb:           253 250 246;
+  --color-primary:                          #FDFAF6;
+  --color-primary-hover:                    #E5DDD3;
+  --color-border:                           transparent;
+  --color-border-rgb:                       255 255 255;
+  --color-shadow:                           transparent;
+  --color-shadow-rgb:                       0 0 0;
+  --color-primary-button-background:        #FDFAF6;
+  --color-primary-button-text:              #1C1917;
+  --color-primary-button-border:            #FDFAF6;
+  --color-primary-button-hover-background:  transparent;
+  --color-primary-button-hover-text:        #FDFAF6;
+  --color-primary-button-hover-border:      #FDFAF6;
+  --color-secondary-button-background:      transparent;
+  --color-secondary-button-text:            #FDFAF6;
+  --color-secondary-button-border:          rgba(253,250,246,0.7);
+  --color-secondary-button-hover-background:#FDFAF6;
+  --color-secondary-button-hover-text:      #1C1917;
+  --color-secondary-button-hover-border:    #FDFAF6;
+  --color-input-background:                 rgba(253,250,246,0.08);
+  --color-input-text:                       #FDFAF6;
+  --color-input-text-rgb:                   253 250 246;
+  --color-input-border:                     rgba(253,250,246,0.4);
+  --color-input-hover-background:           rgba(253,250,246,0.14);
+  --color-variant-background:               rgba(253,250,246,0.08);
+  --color-variant-text:                     #FDFAF6;
+  --color-variant-text-rgb:                 253 250 246;
+  --color-variant-border:                   rgba(253,250,246,0.4);
+  --color-variant-hover-background:         rgba(253,250,246,0.2);
+  --color-variant-hover-text:               #FDFAF6;
+  --color-variant-hover-border:             #FDFAF6;
+  --color-selected-variant-background:      #FDFAF6;
+  --color-selected-variant-text:            #1C1917;
+  --color-selected-variant-border:          #FDFAF6;
+  --color-selected-variant-hover-background:#E5DDD3;
+  --color-selected-variant-hover-text:      #1C1917;
+  --color-selected-variant-hover-border:    #E5DDD3;
+}
+
+/* Scheme 7 — Warm Linen */
+.color-scheme-7 {
+  --color-background:                       #F0EAE2;
+  --color-background-rgb:                   240 234 226;
+  --color-foreground:                       #2A2520;
+  --color-foreground-rgb:                   42 37 32;
+  --color-foreground-heading:               #1C1917;
+  --color-foreground-heading-rgb:           28 25 23;
+  --color-primary:                          #1C1917;
+  --color-primary-hover:                    #6B5D52;
+  --color-border:                           #D9D2C8;
+  --color-border-rgb:                       217 210 200;
+  --color-shadow:                           #1C1917;
+  --color-shadow-rgb:                       28 25 23;
+  --color-primary-button-background:        #1C1917;
+  --color-primary-button-text:              #FDFAF6;
+  --color-primary-button-border:            #1C1917;
+  --color-primary-button-hover-background:  transparent;
+  --color-primary-button-hover-text:        #1C1917;
+  --color-primary-button-hover-border:      #1C1917;
+  --color-secondary-button-background:      transparent;
+  --color-secondary-button-text:            #1C1917;
+  --color-secondary-button-border:          #1C1917;
+  --color-secondary-button-hover-background:#1C1917;
+  --color-secondary-button-hover-text:      #F0EAE2;
+  --color-secondary-button-hover-border:    #1C1917;
+  --color-input-background:                 #FDFAF6;
+  --color-input-text:                       #2A2520;
+  --color-input-text-rgb:                   42 37 32;
+  --color-input-border:                     #C8C0B4;
+  --color-input-hover-background:           #E5DDD3;
+  --color-variant-background:               #FDFAF6;
+  --color-variant-text:                     #1C1917;
+  --color-variant-text-rgb:                 28 25 23;
+  --color-variant-border:                   #D9D2C8;
+  --color-variant-hover-background:         #E5DDD3;
+  --color-variant-hover-text:               #1C1917;
+  --color-variant-hover-border:             #1C1917;
+  --color-selected-variant-background:      #1C1917;
+  --color-selected-variant-text:            #FDFAF6;
+  --color-selected-variant-border:          #1C1917;
+  --color-selected-variant-hover-background:#2A2520;
+  --color-selected-variant-hover-text:      #FDFAF6;
+  --color-selected-variant-hover-border:    #2A2520;
+}
+
+/* Scheme 8 — Soft Ivory (near-white luxury) */
+.color-scheme-8 {
+  --color-background:                       #FAF7F2;
+  --color-background-rgb:                   250 247 242;
+  --color-foreground:                       #2A2520;
+  --color-foreground-rgb:                   42 37 32;
+  --color-foreground-heading:               #1C1917;
+  --color-foreground-heading-rgb:           28 25 23;
+  --color-primary:                          #1C1917;
+  --color-primary-hover:                    #6B5D52;
+  --color-border:                           #E5DDD3;
+  --color-border-rgb:                       229 221 211;
+  --color-shadow:                           #1C1917;
+  --color-shadow-rgb:                       28 25 23;
+  --color-primary-button-background:        #1C1917;
+  --color-primary-button-text:              #FDFAF6;
+  --color-primary-button-border:            #1C1917;
+  --color-primary-button-hover-background:  transparent;
+  --color-primary-button-hover-text:        #1C1917;
+  --color-primary-button-hover-border:      #1C1917;
+  --color-secondary-button-background:      transparent;
+  --color-secondary-button-text:            #1C1917;
+  --color-secondary-button-border:          #1C1917;
+  --color-secondary-button-hover-background:#1C1917;
+  --color-secondary-button-hover-text:      #FAF7F2;
+  --color-secondary-button-hover-border:    #1C1917;
+  --color-input-background:                 transparent;
+  --color-input-text:                       #2A2520;
+  --color-input-text-rgb:                   42 37 32;
+  --color-input-border:                     #D0C8BC;
+  --color-input-hover-background:           #F0EAE2;
+  --color-variant-background:               transparent;
+  --color-variant-text:                     #1C1917;
+  --color-variant-text-rgb:                 28 25 23;
+  --color-variant-border:                   #D0C8BC;
+  --color-variant-hover-background:         #EDE5D8;
+  --color-variant-hover-text:               #1C1917;
+  --color-variant-hover-border:             #1C1917;
+  --color-selected-variant-background:      #1C1917;
+  --color-selected-variant-text:            #FDFAF6;
+  --color-selected-variant-border:          #1C1917;
+  --color-selected-variant-hover-background:#2A2520;
+  --color-selected-variant-hover-text:      #FDFAF6;
+  --color-selected-variant-hover-border:    #2A2520;
+}
+
+/* ============================================================
+   GLOBAL STYLES
+   ============================================================ */
+
+body {
+  background-color: var(--lp-ivory);
+  font-family: var(--lp-font-sans) !important;
+  font-weight: 300;
+  font-size: 13px;
+  letter-spacing: 0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+
+h1, .h1,
+.text-block.h1 > *,
+.text-block.h1 :is(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--lp-font-serif) !important;
+  font-weight: 300;
+  letter-spacing: 0.035em;
+  line-height: 1.07;
+}
+
+h2, .h2,
+.text-block.h2 > *,
+.text-block.h2 :is(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--lp-font-serif) !important;
+  font-weight: 300;
+  letter-spacing: 0.03em;
+  line-height: 1.1;
+}
+
+h3, .h3,
+.text-block.h3 > *,
+.text-block.h3 :is(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--lp-font-serif) !important;
+  font-weight: 300;
+  letter-spacing: 0.03em;
+  line-height: 1.2;
+}
+
+h4, .h4,
+.text-block.h4 > *,
+.text-block.h4 :is(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--lp-font-serif) !important;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  line-height: 1.25;
+}
+
+h5, .h5,
+.text-block.h5 > *,
+.text-block.h5 :is(h1, h2, h3, h4, h5, h6),
+h6, .h6,
+.text-block.h6 > *,
+.text-block.h6 :is(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--lp-font-sans) !important;
+  font-weight: 500;
+  font-size: 0.68rem !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase;
+  line-height: 1.6;
+}
+
+p, .paragraph {
+  font-family: var(--lp-font-sans) !important;
+  font-weight: 300;
+  line-height: 1.75;
+  letter-spacing: 0.01em;
+}
+
+/* ============================================================
+   LINKS
+   ============================================================ */
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: opacity 0.3s ease !important;
+}
+
+a:hover {
+  opacity: 0.6;
+}
+
+p a,
+.rte a {
+  text-decoration-color: currentcolor;
+}
+
+p a:hover,
+.rte a:hover {
+  opacity: 0.6;
+  text-decoration-color: transparent;
+}
+
+/* ============================================================
+   HEADER & NAVIGATION
+   ============================================================ */
+
+header-component,
+header-component .header,
+.header {
+  border-bottom: 1px solid var(--lp-border-light) !important;
+}
+
+.header__logo,
+.header__heading,
+.header__heading-logo,
+.header__heading-link {
+  font-family: var(--lp-font-serif) !important;
+  letter-spacing: 0.18em !important;
+  text-transform: uppercase;
+  font-weight: 400 !important;
+  font-size: 1.1rem !important;
+}
+
+/* Main navigation links */
+.header__menu-item,
+.header .list-menu__item,
+.header-menu__item,
+.list-menu .list-menu__item {
+  font-family: var(--lp-font-sans) !important;
+  font-size: 0.7rem !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+}
+
+.header__menu-item:hover,
+.header .list-menu__item:hover {
+  color: inherit;
+  opacity: 0.55;
+}
+
+/* Header action icons */
+.header__icon,
+.header-actions__icon {
+  transition: opacity 0.3s ease;
+}
+
+.header__icon:hover,
+.header-actions__icon:hover {
+  opacity: 0.55;
+}
+
+/* Announcement bar */
+.announcement-bar__message,
+.announcement-bar__message p,
+.announcement-bar__message a,
+.announcement-bar__message span {
+  font-family: var(--lp-font-sans) !important;
+  font-size: 0.67rem !important;
+  letter-spacing: 0.18em !important;
+  text-transform: uppercase !important;
+  font-weight: 400 !important;
+}
+
+/* Mega menu */
+.mega-menu,
+.header__submenu {
+  border-radius: 0 !important;
+}
+
+.mega-menu .h3,
+.mega-menu .h4,
+.mega-menu .h5,
+.mega-menu .h6,
+.mega-menu h3, .mega-menu h4,
+.mega-menu h5, .mega-menu h6 {
+  font-family: var(--lp-font-sans) !important;
+  font-size: 0.68rem !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase !important;
+  font-weight: 500 !important;
+}
+
+.mega-menu .list-menu__item {
+  font-family: var(--lp-font-sans) !important;
+  font-size: 0.78rem !important;
+  letter-spacing: 0.03em;
+  font-weight: 300;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+
+.button,
+.button-secondary,
+button.shopify-payment-button__button--unbranded {
+  font-family: var(--lp-font-sans) !important;
+  font-size: 0.7rem !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase !important;
+  border-radius: 0 !important;
+  padding-block: 15px !important;
+  padding-inline: 36px !important;
+  transition: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease !important;
+}
+
+.button:not(.button-secondary):not(.button-unstyled) {
+  box-shadow: none !important;
+}
+
+.button-secondary {
+  box-shadow: inset 0 0 0 1px currentcolor !important;
+}
+
+.button:not(.button-secondary):not(.button-unstyled):hover {
+  box-shadow: inset 0 0 0 1px var(--color-primary-button-hover-border) !important;
+}
+
+.button-unstyled {
+  font-family: var(--lp-font-sans) !important;
+  letter-spacing: 0.03em;
+}
+
+.button-unstyled--with-icon {
+  font-family: var(--lp-font-sans) !important;
+  font-size: 0.75rem !important;
+  letter-spacing: 0.08em;
+}
+
+/* ============================================================
+   FORMS & INPUTS
+   ============================================================ */
+
+input:not([type='checkbox'], [type='radio']),
+textarea,
+select {
+  font-family: var(--lp-font-sans) !important;
+  font-size: 0.82rem !important;
+  font-weight: 300 !important;
+  letter-spacing: 0.03em;
+  border-radius: 0 !important;
+  border: none !important;
+  border-bottom: 1px solid var(--color-input-border) !important;
+  box-shadow: none !important;
+  background-color: var(--color-input-background) !important;
+  padding: 13px 2px !important;
+  transition: border-color 0.3s ease !important;
+}
+
+input:not([type='checkbox'], [type='radio']):hover,
+textarea:hover {
+  background-color: var(--color-input-hover-background) !important;
+}
+
+input:not([type='checkbox'], [type='radio']):focus,
+textarea:focus {
+  border-bottom-color: var(--color-foreground) !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+::placeholder {
+  font-weight: 300;
+  opacity: 0.5;
+  letter-spacing: 0.03em;
+}
+
+label {
+  font-family: var(--lp-font-sans) !important;
+  font-size: 0.68rem !important;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 400 !important;
+}
+
+/* ============================================================
+   PRODUCT GRID
+   ============================================================ */
+
+.product-grid {
+  gap: 0 !important;
+}
+
+.product-grid__item {
+  border: none !important;
+  border-bottom: 1px solid var(--lp-border-light) !important;
+}
+
+.product-grid__item:nth-child(odd) {
+  border-right: 1px solid var(--lp-border-light) !important;
+}
+
+.product-card {
+  border-radius: 0 !important;
+  transition: none !important;
+}
+
+.product-card__image-wrapper,
+.card-gallery,
+.product-card__image {
+  border-radius: 0 !important;
+  overflow: hidden;
+}
+
+/* Refined image zoom — more luxurious 0.6s ease */
+@media (any-pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .card-hover-effect-subtle-zoom .card-gallery,
+  .card-hover-effect-subtle-zoom .product-card__image {
+    transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  }
+
+  .card-hover-effect-subtle-zoom .product-card:hover .card-gallery,
+  .card-hover-effect-subtle-zoom .product-card:hover .product-card__image {
+    transform: scale(1.04) !important;
+  }
+
+  /* Suppress lift/scale — image zoom only */
+  .card-hover-effect-lift .product-card:hover,
+  .card-hover-effect-scale .product-card:hover,
+  .card-hover-effect-lift .collection-card:hover,
+  .card-hover-effect-scale .collection-card:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+}
+
+/* Product card title */
+.product-card .h3,
+.product-card .h4,
+.product-card h3,
+.product-card h4 {
+  font-family: var(--lp-font-serif) !important;
+  font-weight: 300 !important;
+  letter-spacing: 0.025em;
+  font-size: clamp(0.85rem, 1.3vw, 1.05rem) !important;
+}
+
+/* Product card info (body text, price) */
+.product-card p,
+.product-card span {
+  font-family: var(--lp-font-sans) !important;
+  font-size: 0.72rem !important;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+}
+
+/* Price */
+.price,
+.compare-at-price,
+.unit-price,
+.price-item {
+  font-family: var(--lp-font-sans) !important;
+  font-size: 0.75rem !important;
+  font-weight: 300 !important;
+  letter-spacing: 0.07em;
+}
+
+.compare-at-price {
+  opacity: 0.35;
+}
+
+/* Badges */
+.badge,
+[class*='badge--'] {
+  border-radius: 0 !important;
+  font-family: var(--lp-font-sans) !important;
+  font-size: 0.58rem !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  font-weight: 500 !important;
+}
+
+/* ============================================================
+   PRODUCT PAGE (PDP)
+   ============================================================ */
+
+.product-information .h1,
+.product-information h1 {
+  font-size: clamp(1.75rem, 2.8vw, 2.8rem) !important;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  line-height: 1.08;
+}
+
+.product-information .price,
+.product-information .price-item {
+  font-size: 0.88rem !important;
+  letter-spacing: 0.08em;
+}
+
+.product-information .rte p,
+.product-information .text-block p {
+  font-size: 0.82rem !important;
+  font-weight: 300;
+  line-height: 1.75;
+  letter-spacing: 0.02em;
+  color: var(--lp-text-muted);
+}
+
+/* Accordion / details */
+summary {
+  font-family: var(--lp-font-sans) !important;
+  font-size: 0.68rem !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  font-weight: 400 !important;
+  padding-block: 1.15rem;
+  border-top: 1px solid var(--lp-border-light);
+}
+
+details:last-of-type > summary {
+  border-bottom: 1px solid var(--lp-border-light);
+}
+
+summary:hover {
+  opacity: 0.6;
+  color: inherit;
+}
+
+/* Variant picker buttons */
+.variant-option__button-label {
+  border-radius: 0 !important;
+  font-family: var(--lp-font-sans) !important;
+  font-size: 0.68rem !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  font-weight: 400 !important;
+  min-height: 2.75em !important;
+}
+
+/* ============================================================
+   COLLECTION CARDS
+   ============================================================ */
+
+.collection-card,
+.collection-card__inner {
+  border-radius: 0 !important;
+}
+
+.collection-card__image {
+  border-radius: 0 !important;
+  overflow: hidden;
+}
+
+.collection-card__title,
+.collection-card .h3,
+.collection-card .h4,
+.collection-card h3,
+.collection-card h4 {
+  font-family: var(--lp-font-serif) !important;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+}
+
+/* ============================================================
+   SECTIONS
+   ============================================================ */
+
+.section__heading {
+  font-family: var(--lp-font-serif) !important;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+}
+
+/* ============================================================
+   CART DRAWER
+   ============================================================ */
+
+.cart-drawer,
+.drawer,
+[id*='cart'] dialog {
+  border-radius: 0 !important;
+}
+
+.cart-drawer .h2,
+.cart-drawer h2 {
+  font-family: var(--lp-font-serif) !important;
+  font-weight: 300;
+  letter-spacing: 0.06em;
+}
+
+.cart-item__name,
+.cart-item h3,
+.cart-item .h3 {
+  font-family: var(--lp-font-serif) !important;
+  font-weight: 300;
+}
+
+.cart-summary .h3,
+.cart-summary h3,
+.cart-summary .h4,
+.cart-summary h4 {
+  font-family: var(--lp-font-sans) !important;
+  font-size: 0.7rem !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  font-weight: 500 !important;
+}
+
+/* ============================================================
+   SEARCH
+   ============================================================ */
+
+.predictive-search,
+.search-modal__content,
+.search-modal dialog {
+  border-radius: 0 !important;
+}
+
+.predictive-search__heading,
+.search-modal .h2,
+.search-modal h2 {
+  font-family: var(--lp-font-sans) !important;
+  font-size: 0.68rem !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase !important;
+  font-weight: 500 !important;
+}
+
+.predictive-search-results__card-title {
+  font-family: var(--lp-font-serif) !important;
+  font-weight: 300;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+
+footer {
+  border-top: 1px solid var(--lp-border-light);
+}
+
+footer h4, footer .h4 {
+  font-family: var(--lp-font-sans) !important;
+  font-size: 0.65rem !important;
+  letter-spacing: 0.2em !important;
+  text-transform: uppercase !important;
+  font-weight: 500 !important;
+  margin-bottom: 1.4rem;
+}
+
+footer h5, footer .h5 {
+  font-family: var(--lp-font-sans) !important;
+  font-size: 0.62rem !important;
+  letter-spacing: 0.2em !important;
+  text-transform: uppercase !important;
+  font-weight: 500 !important;
+}
+
+footer p,
+footer li,
+footer a,
+footer span {
+  font-family: var(--lp-font-sans) !important;
+  font-size: 0.78rem !important;
+  font-weight: 300 !important;
+  letter-spacing: 0.02em;
+  line-height: 1.8;
+}
+
+footer a:hover {
+  opacity: 0.55;
+}
+
+.footer__copyright,
+.footer__copyright p,
+.footer__copyright span {
+  font-family: var(--lp-font-sans) !important;
+  font-size: 0.62rem !important;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 300 !important;
+  opacity: 0.55;
+}
+
+/* ============================================================
+   MODALS & DIALOGS
+   ============================================================ */
+
+.dialog-modal,
+.dialog-drawer,
+dialog {
+  border-radius: 0 !important;
+}
+
+/* ============================================================
+   MARQUEE
+   ============================================================ */
+
+.marquee__item,
+.marquee p,
+.marquee span,
+.marquee__text {
+  font-family: var(--lp-font-serif) !important;
+  font-style: italic;
+  font-weight: 300;
+  letter-spacing: 0.05em;
+}
+
+/* ============================================================
+   PAGINATION
+   ============================================================ */
+
+.pagination__item {
+  border-radius: 0 !important;
+  font-family: var(--lp-font-sans) !important;
+  font-size: 0.72rem !important;
+  letter-spacing: 0.1em !important;
+}
+
+/* ============================================================
+   FILTER & SORT
+   ============================================================ */
+
+.facets__heading,
+.list-filter__title,
+.filter-group__title {
+  font-family: var(--lp-font-sans) !important;
+  font-size: 0.65rem !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase !important;
+  font-weight: 500 !important;
+}
+
+.sorting__label {
+  font-family: var(--lp-font-sans) !important;
+  font-size: 0.7rem !important;
+  letter-spacing: 0.1em;
+}
+
+/* ============================================================
+   BLOG CARDS
+   ============================================================ */
+
+.blog-post-card__title,
+.featured-blog-posts-card__title {
+  font-family: var(--lp-font-serif) !important;
+  font-weight: 300;
+  letter-spacing: 0.03em;
+}
+
+.blog-post-card__tag,
+.featured-blog-posts-card__tag,
+.blog-post-card__author {
+  font-family: var(--lp-font-sans) !important;
+  font-size: 0.63rem !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase !important;
+  font-weight: 400;
+}
+
+/* ============================================================
+   SHOW-MORE BUTTON
+   ============================================================ */
+
+.show-more__label {
+  font-family: var(--lp-font-sans) !important;
+  font-size: 0.68rem !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+}
+
+/* ============================================================
+   TAGS & PILLS
+   ============================================================ */
+
+.tag,
+[class*='facets__pill'] {
+  border-radius: 0 !important;
+  font-family: var(--lp-font-sans) !important;
+  font-size: 0.63rem !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  font-weight: 400;
+}
+
+/* ============================================================
+   SWATCHES
+   ============================================================ */
+
+.swatch,
+.swatch--pill {
+  border-radius: 0 !important;
+}
+
+/* ============================================================
+   QUANTITY SELECTOR
+   ============================================================ */
+
+quantity-selector,
+.quantity-selector {
+  border-radius: 0 !important;
+}
+
+quantity-selector button,
+.quantity-selector button {
+  border-radius: 0 !important;
+}
+
+/* ============================================================
+   FOCUS RING — MINIMAL
+   ============================================================ */
+
+*:focus-visible {
+  outline: 1px solid currentcolor !important;
+  outline-offset: 3px !important;
+}
+
+/* ============================================================
+   ZOOM DIALOG
+   ============================================================ */
+
+zoom-dialog dialog {
+  background: var(--lp-ivory);
+}
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media screen and (max-width: 749px) {
+  .button,
+  .button-secondary {
+    font-size: 0.67rem !important;
+    letter-spacing: 0.13em !important;
+    padding-inline: 24px !important;
+  }
+
+  h1, .h1 {
+    letter-spacing: 0.02em;
+  }
+
+  .header__logo,
+  .header__heading {
+    font-size: 0.95rem !important;
+    letter-spacing: 0.14em !important;
+  }
+}
