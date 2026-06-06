@@ -1162,3 +1162,123 @@ zoom-dialog dialog {
     letter-spacing: 0.14em !important;
   }
 }
+
+/* ============================================================
+   QUICK-ADD BUTTON — "ADD TO CART" rectangular, text always visible
+   ============================================================ */
+
+/* Remove pill shape, make luxury rectangle */
+.quick-add__button {
+  border-radius: 0 !important;
+  border: 1px solid rgba(28, 25, 23, 0.4) !important;
+  background: rgba(253, 250, 246, 0.92) !important;
+  backdrop-filter: blur(10px) saturate(130%) !important;
+  height: auto !important;
+  padding-block: 10px !important;
+  padding-inline: 20px !important;
+  color: var(--lp-charcoal) !important;
+  font-size: 0.6rem !important;
+  letter-spacing: 0.18em !important;
+  text-transform: uppercase !important;
+  font-weight: 400 !important;
+  gap: 0 !important;
+}
+
+/* Inner text wrapper — remove pill and extra background */
+.quick-add__button .add-to-cart-text {
+  border-radius: 0 !important;
+  background: transparent !important;
+  overflow: visible !important;
+  height: auto !important;
+  gap: 0 !important;
+}
+
+/* Hide cart icon — text only for clean luxury look */
+.quick-add__button .add-to-cart-icon {
+  display: none !important;
+}
+
+/* Always show text (override hidden 0fr grid column) */
+.quick-add__button .add-to-cart-text__content {
+  grid-template-columns: 1fr !important;
+}
+
+.quick-add__button .add-to-cart-text__content > span > span {
+  opacity: 1 !important;
+  filter: none !important;
+  translate: none !important;
+  padding-right: 0 !important;
+}
+
+/* Show button on mobile (default is display:none) */
+@media screen and (max-width: 749px) {
+  .quick-add__button {
+    display: flex !important;
+    opacity: 1 !important;
+  }
+}
+
+/* ============================================================
+   QUICK-ADD MODAL — Close button, caret fix, image layout
+   ============================================================ */
+
+/* Visible black X close button — override huge padding from .button class */
+.quick-add-modal__close {
+  padding-block: 8px !important;
+  padding-inline: 8px !important;
+  width: 34px !important;
+  height: 34px !important;
+  color: var(--lp-charcoal) !important;
+  background: var(--lp-ivory) !important;
+  border: 1px solid var(--lp-border-light) !important;
+  border-radius: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: visible !important;
+}
+
+.quick-add-modal__close svg {
+  width: 14px !important;
+  height: 14px !important;
+  min-width: 14px !important;
+  flex-shrink: 0 !important;
+  color: var(--lp-charcoal) !important;
+}
+
+/* Fix oversized dropdown caret in quick-add modal */
+.quick-add-modal .icon-caret {
+  width: 10px !important;
+  height: 6px !important;
+  max-width: 10px !important;
+  max-height: 6px !important;
+}
+
+/* Product image — span 2 of 4 columns on mobile for more prominence */
+@media screen and (max-width: 749px) {
+  .quick-add-modal__content .product-information__media {
+    grid-column: 1 / span 2 !important;
+    grid-row: 1 !important;
+  }
+
+  .quick-add-modal__content .product-header {
+    grid-column: 3 / -1 !important;
+    grid-row: 1 !important;
+  }
+
+  .quick-add-modal__content .product-details {
+    grid-column: 1 / -1 !important;
+    grid-row: 2 !important;
+  }
+}
+
+/* ============================================================
+   PRODUCT PAGE — Prevent header from covering product image
+   ============================================================ */
+
+/* The media-gallery has class sticky-content which gets
+   margin-top: -header-height when transparent header is active.
+   Reset this so the product image isn't hidden behind the header. */
+#MainContent[data-template*="product"] .product-information__media .sticky-content {
+  margin-top: 0 !important;
+}
