@@ -1617,3 +1617,300 @@ zoom-dialog dialog {
   letter-spacing: 0.18em !important;
   text-transform: uppercase !important;
 }
+
+/* ============================================================
+   DESKTOP (≥ 750px) — Layout, Typography & Interaction
+   ============================================================ */
+
+@media screen and (min-width: 750px) {
+
+  /* ── Product Grid: fix borders for 3-4 column layouts ─────
+     Mobile rule adds right border to :nth-child(odd) which only
+     works for 2 columns. On desktop we just use bottom borders
+     so it holds for any column count (auto-fill). */
+
+  .product-grid__item:nth-child(odd) {
+    border-right: none !important;
+  }
+
+  /* Restore desktop: right border on every item except last in row.
+     For a 4-col grid: remove border from 4n. For robustness we
+     just use bottom-only borders on desktop (clean luxury look). */
+  .product-grid__item {
+    border-right: none !important;
+    border-bottom: 1px solid var(--lp-border-light) !important;
+  }
+
+  /* Remove bottom border from very last row items */
+  .product-grid__item:last-child {
+    border-bottom: none !important;
+  }
+
+  /* ── Navigation — underline slide animation ───────────────── */
+
+  .header__menu-link,
+  .list-menu__item > a,
+  .header-navigation a {
+    position: relative;
+    text-decoration: none !important;
+  }
+
+  .header__menu-link::after,
+  .list-menu__item > a::after,
+  .header-navigation a::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: currentColor;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .header__menu-link:hover::after,
+  .list-menu__item > a:hover::after,
+  .header-navigation a:hover::after {
+    width: 100%;
+  }
+
+  /* Active / current page: permanent underline */
+  .header__menu-link[aria-current="page"]::after,
+  .list-menu__item--active > a::after {
+    width: 100% !important;
+    opacity: 0.5;
+  }
+
+  /* ── Hero Text — Desktop scale ────────────────────────────── */
+
+  .hero-wrapper h1,
+  .hero-wrapper .h1 {
+    font-size: clamp(2.8rem, 6vw, 7rem) !important;
+    letter-spacing: 0.02em;
+    line-height: 1.0;
+    font-weight: 300 !important;
+  }
+
+  .hero-wrapper h2,
+  .hero-wrapper .h2 {
+    font-size: clamp(2rem, 3.5vw, 4rem) !important;
+    font-weight: 300 !important;
+  }
+
+  .hero-wrapper h3,
+  .hero-wrapper .h3 {
+    font-size: clamp(1.5rem, 2.5vw, 2.8rem) !important;
+    font-weight: 300 !important;
+  }
+
+  /* Hero caption / body text in hero */
+  .hero-wrapper p {
+    font-size: clamp(0.82rem, 0.9vw, 0.95rem) !important;
+    letter-spacing: 0.06em;
+    line-height: 1.7;
+    max-width: 52ch;
+  }
+
+  /* ── Section Headings — Generous desktop scale ────────────── */
+
+  .section__heading {
+    font-size: clamp(2rem, 3.5vw, 3.8rem) !important;
+    letter-spacing: 0.04em;
+    line-height: 1.08;
+    font-weight: 300 !important;
+  }
+
+  /* ── Product Page — Desktop detail column ─────────────────── */
+
+  /* More air in the info column */
+  .product-information .h1,
+  .product-information h1 {
+    font-size: clamp(2.2rem, 3.2vw, 3.4rem) !important;
+    line-height: 1.05;
+    letter-spacing: 0.025em;
+  }
+
+  /* Product description: cap line length for readability */
+  .product-information .rte,
+  .product-information .text-block {
+    max-width: 46ch;
+  }
+
+  /* Accordion body: readable line length */
+  .accordion details .rte,
+  .accordion__content {
+    max-width: 48ch;
+  }
+
+  /* ── Collection Page Heading ─────────────────────────────── */
+
+  .collection-banner h1,
+  .collection-header h1 {
+    font-size: clamp(2.5rem, 4.5vw, 5rem) !important;
+    font-weight: 300;
+    letter-spacing: 0.04em;
+    line-height: 1.0;
+  }
+
+  /* ── Product Card — Desktop hover refinements ─────────────── */
+
+  .product-card__title,
+  .product-card h3,
+  .product-card h4 {
+    transition: opacity 0.25s ease;
+  }
+
+  .product-card:hover .product-card__title,
+  .product-card:hover h3,
+  .product-card:hover h4 {
+    opacity: 0.6;
+  }
+
+  /* "Complete the Look" heading — desktop scale */
+  .product-list .product-list__content h2,
+  .product-list .product-list__content p {
+    font-size: clamp(2rem, 3.5vw, 3rem) !important;
+    margin-bottom: 28px;
+  }
+
+  /* ── Trust Strip — side-by-side on desktop ───────────────── */
+
+  .lp-trust-strip__item {
+    flex-direction: row;
+    justify-content: flex-start;
+    text-align: left;
+    font-size: 0.62rem;
+  }
+
+  /* ── Sticky Add-to-Cart — desktop width cap ──────────────── */
+
+  .sticky-add-to-cart__bar {
+    padding-inline: clamp(24px, 4vw, 80px) !important;
+  }
+
+  /* ── Buttons — desktop scale ─────────────────────────────── */
+
+  .button:not(.button-unstyled):not(.quick-add__button):not(.sticky-add-to-cart__button):not([class*="icon"]) {
+    padding-block: 16px !important;
+    padding-inline: 44px !important;
+    font-size: 0.67rem !important;
+    letter-spacing: 0.16em !important;
+  }
+
+  /* ── Footer — desktop spacing ─────────────────────────────── */
+
+  footer {
+    padding-block: 56px 44px;
+  }
+
+  footer h4,
+  footer .h4 {
+    margin-bottom: 1.6rem;
+  }
+
+}
+
+/* ============================================================
+   WIDE DESKTOP (≥ 1100px) — Premium spacing & max luxury feel
+   ============================================================ */
+
+@media screen and (min-width: 1100px) {
+
+  /* ── Hero text — very large screens ─────────────────────── */
+
+  .hero-wrapper h1,
+  .hero-wrapper .h1 {
+    font-size: clamp(4rem, 7vw, 8.5rem) !important;
+  }
+
+  /* ── Product detail column — more inner breathing room ───── */
+
+  /* ── Section-level spacing ───────────────────────────────── */
+
+  .section {
+    --section-padding: clamp(48px, 5vw, 96px);
+  }
+
+  /* ── Product card title — crisp at high pixel density ────── */
+
+  .product-card .h3,
+  .product-card h3,
+  .product-card .h4,
+  .product-card h4 {
+    font-size: clamp(0.92rem, 1.05vw, 1.1rem) !important;
+    letter-spacing: 0.03em;
+  }
+
+  /* Product card price — subtle sizing */
+  .product-card .price,
+  .product-card .price-item {
+    font-size: 0.78rem !important;
+  }
+
+  /* ── "Complete the Look" — wider card gaps ───────────────── */
+  .product-list .product-list__content {
+    padding-bottom: 36px;
+  }
+
+  /* ── Trust strip — wider spacing on large screens ─────────── */
+
+  .lp-trust-strip {
+    padding-block: 18px;
+    gap: 0;
+  }
+
+  .lp-trust-strip__item {
+    padding-inline: 8px;
+    font-size: 0.63rem;
+    letter-spacing: 0.12em;
+  }
+
+  /* ── Sticky bar — refined for large screens ──────────────── */
+
+  .sticky-add-to-cart__title {
+    font-size: 1.05rem !important;
+  }
+
+  .sticky-add-to-cart__price {
+    font-size: 0.85rem;
+  }
+
+  /* ── Product image gallery — no gap on desktop ───────────── */
+
+  .media-gallery .media {
+    border-radius: 0 !important;
+  }
+
+  /* ── Collection banner — grand scale on large screens ────── */
+
+  .collection-banner h1,
+  .collection-header h1 {
+    font-size: clamp(3.5rem, 5.5vw, 6.5rem) !important;
+  }
+
+}
+
+/* ============================================================
+   ULTRA-WIDE (≥ 1440px) — Constrain content, luxury whitespace
+   ============================================================ */
+
+@media screen and (min-width: 1440px) {
+
+  /* Prevent hero text from growing disproportionately */
+  .hero-wrapper h1,
+  .hero-wrapper .h1 {
+    font-size: clamp(5rem, 7vw, 9rem) !important;
+  }
+
+  /* More generous nav spacing */
+  .header__menu-link,
+  .list-menu__item > a {
+    letter-spacing: 0.17em !important;
+  }
+
+  /* Product grid: last item in last row gets no bottom border */
+  .product-grid {
+    /* Optional: very slight gap creates luxury breathing room */
+  }
+
+}
