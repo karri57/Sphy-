@@ -1,0 +1,103 @@
+<div class="section-background color-{{ section.settings.color_scheme }}"></div>
+<div class="section color-{{ section.settings.color_scheme }} section--{{ section.settings.section_width }}">
+  <div class="lp-brand-story spacing-style" style="{% render 'spacing-style', settings: section.settings %}">
+    <div class="lp-brand-story__inner">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="lp-brand-story__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="lp-brand-story__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+      {%- if section.settings.body != blank -%}
+        <div class="lp-brand-story__body rte">{{ section.settings.body | newline_to_br }}</div>
+      {%- endif -%}
+      {%- if section.settings.cta_label != blank -%}
+        <a href="{{ section.settings.cta_link }}" class="button lp-brand-story__cta">
+          {{- section.settings.cta_label -}}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Brand Story",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Our Story"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Wear Your Faith. Carry the Message."
+    },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Body text",
+      "default": "KarrionAmir was built on a simple conviction: your wardrobe is a statement of who you are and who you follow. We create faith-based streetwear for those who are done hiding their belief — bold pieces that carry the message wherever you go.\n\nEvery thread, every graphic, every drop is rooted in Scripture and crafted for the streets. Because faith doesn't clock out, and neither do we."
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Button label",
+      "default": "Shop the Collection"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Button link"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-5"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Width",
+      "options": [
+        { "value": "page-width", "label": "Page width" },
+        { "value": "full-width", "label": "Full width" }
+      ],
+      "default": "full-width"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand Story"
+    }
+  ]
+}
+{% endschema %}

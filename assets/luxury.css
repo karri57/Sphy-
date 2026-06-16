@@ -1914,3 +1914,259 @@ zoom-dialog dialog {
   }
 
 }
+
+/* ============================================================
+   MOBILE (≤ 749px) — KarrionAmir Mobile-First Optimizations
+   81% of traffic is mobile — highest priority
+   ============================================================ */
+
+/* Prevent horizontal scroll on all viewports */
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* Input font-size ≥ 16px prevents iOS auto-zoom on focus */
+input[type="email"],
+input[type="text"],
+input[type="search"],
+input[type="password"],
+input[type="number"],
+input[type="tel"],
+select,
+textarea {
+  font-size: 16px !important;
+}
+
+@media screen and (max-width: 749px) {
+
+  /* Tap targets: minimum 44×44 px for all interactive elements */
+  .header__icon,
+  .header__icon-wrapper,
+  .cart-icon-bubble,
+  .quantity__button,
+  .accordion__summary,
+  .variant-picker__option-label,
+  .swatch__item,
+  nav a,
+  .footer a {
+    min-height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* ATC button: full-width, generous tap area */
+  .product-form-buttons .button[name="add"],
+  .product-form-buttons .button[data-add-to-cart] {
+    width: 100% !important;
+    min-height: 52px !important;
+    font-size: 0.82rem !important;
+    letter-spacing: 0.12em !important;
+  }
+
+  /* Sticky ATC bar: edge-to-edge on mobile */
+  .sticky-add-to-cart__bar {
+    padding-inline: 16px !important;
+  }
+
+  /* Product images: full viewport width, no clipping */
+  .product-information__media,
+  .media-gallery,
+  .media-gallery .media {
+    width: 100vw !important;
+    margin-inline: calc(-1 * var(--page-margin, 16px)) !important;
+    max-width: 100vw !important;
+    border-radius: 0 !important;
+  }
+
+  /* Product title: readable on 375px */
+  .product-information h1,
+  .product-information .product-information__title {
+    font-size: clamp(1.45rem, 7vw, 2rem) !important;
+    line-height: 1.18 !important;
+  }
+
+  /* Trust strip: centered row on mobile */
+  .lp-trust-strip {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-block: 12px;
+    justify-content: center;
+  }
+
+  .lp-trust-strip__item {
+    flex-direction: row;
+    gap: 6px;
+    font-size: 0.68rem;
+    justify-content: center;
+  }
+
+  /* Low-stock indicator: larger text on small screens */
+  .lp-low-stock {
+    font-size: 0.82rem;
+  }
+
+  /* Cart checkout button: full-width, prominent */
+  .cart-page .button[name="checkout"],
+  .cart-page form[action="/checkout"] .button {
+    width: 100% !important;
+    min-height: 52px !important;
+  }
+
+  /* Quantity buttons: thumb-friendly */
+  .quantity__button {
+    min-width: 44px !important;
+    min-height: 44px !important;
+  }
+
+  /* Sections: no overflow on mobile */
+  .section, .shopify-section {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+
+  /* Brand story section: tighter padding on mobile */
+  .lp-brand-story {
+    padding-block: 48px !important;
+    padding-inline: 20px !important;
+  }
+
+  .lp-brand-story__heading {
+    font-size: clamp(1.7rem, 8vw, 2.4rem) !important;
+  }
+
+  /* Social proof text: readable at 375px */
+  .lp-social-proof {
+    font-size: 0.78rem;
+    margin-block-end: 10px;
+  }
+
+  /* Toast: offset from edge on small screens */
+  .lp-toast {
+    left: 12px;
+    right: 12px;
+    max-width: calc(100% - 24px);
+  }
+
+}
+
+/* ── Social Proof (people viewing) ─────────────────────────── */
+
+.lp-social-proof {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: var(--color-foreground);
+  margin-block-end: 12px;
+  font-family: var(--lp-font-sans, var(--font-body--family));
+}
+
+.lp-social-proof__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  flex-shrink: 0;
+  animation: lp-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes lp-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.55; transform: scale(0.82); }
+}
+
+/* ── Recent Order Toast ──────────────────────────────────────── */
+
+.lp-toast {
+  position: fixed;
+  bottom: -140px;
+  left: 16px;
+  z-index: 9999;
+  background: var(--color-background, #fff);
+  border: 1px solid var(--lp-border-light, rgba(28,25,23,0.12));
+  border-radius: 0;
+  padding: 14px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  max-width: 300px;
+  box-shadow: 0 8px 32px rgba(28,25,23,0.13);
+  transition: bottom 0.42s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--color-foreground);
+  font-family: var(--lp-font-sans, var(--font-body--family));
+}
+
+.lp-toast--visible {
+  bottom: 16px;
+}
+
+.lp-toast svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: #22c55e;
+}
+
+.lp-toast strong {
+  display: block;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  margin-bottom: 2px;
+}
+
+.lp-toast span {
+  opacity: 0.6;
+  font-size: 0.72rem;
+}
+
+/* ── Brand Story Section ─────────────────────────────────────── */
+
+.lp-brand-story {
+  padding-block: 72px;
+  padding-inline: 24px;
+}
+
+.lp-brand-story__inner {
+  max-width: 680px;
+  margin-inline: auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.lp-brand-story__eyebrow {
+  font-family: var(--lp-font-sans, var(--font-body--family));
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  margin: 0;
+}
+
+.lp-brand-story__heading {
+  font-family: var(--lp-font-serif, var(--font-accent--family));
+  font-size: clamp(1.9rem, 5vw, 3.2rem);
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  line-height: 1.18;
+  margin: 0;
+}
+
+.lp-brand-story__body {
+  font-family: var(--lp-font-sans, var(--font-body--family));
+  font-size: 1rem;
+  line-height: 1.85;
+  letter-spacing: 0.02em;
+  max-width: 56ch;
+  opacity: 0.82;
+  margin: 0;
+}
+
+.lp-brand-story__cta {
+  margin-top: 8px;
+}

@@ -816,10 +816,26 @@
         "padding-block-start": 48,
         "padding-block-end": 48
       }
+    },
+    "brand_story_ka": {
+      "type": "brand-story",
+      "name": "Brand Story",
+      "settings": {
+        "eyebrow": "Our Story",
+        "heading": "Wear Your Faith. Carry the Message.",
+        "body": "KarrionAmir was built on a simple conviction: your wardrobe is a statement of who you are and who you follow. We create faith-based streetwear for those who are done hiding their belief — bold pieces that carry the message wherever you go.\n\nEvery thread, every graphic, every drop is rooted in Scripture and crafted for the streets. Because faith doesn't clock out, and neither do we.",
+        "cta_label": "Shop the Collection",
+        "cta_link": "/collections/all",
+        "color_scheme": "scheme-5",
+        "section_width": "full-width",
+        "padding-block-start": 72,
+        "padding-block-end": 72
+      }
     }
   },
   "order": [
     "hero_iLBwPd",
+    "brand_story_ka",
     "product_list_EDUBdR",
     "collection_list_xpBxCm",
     "product_list_XPy4U3"
