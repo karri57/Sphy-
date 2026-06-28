@@ -2122,6 +2122,25 @@ textarea {
   font-size: 0.72rem;
 }
 
+/* ── Transparent Header: always readable over hero video ─────── */
+
+/* Gradient scrim — overrides the 0px underlay height set in transparent mode */
+header-component[transparent] .header__underlay-closed {
+  height: 100% !important;
+  background: linear-gradient(180deg, rgba(0,0,0,0.42) 0%, rgba(0,0,0,0) 100%) !important;
+}
+
+/* White nav text when not in active sticky state (i.e. at the top of the page) */
+header-component[transparent]:not([data-sticky-state='active']) .header__row {
+  --color-foreground: 255, 255, 255;
+  --color-foreground-rgb: 255, 255, 255;
+}
+
+/* Idle state normally sets opacity:0 — don't hide the transparent header at page top */
+header-component[transparent][data-sticky-state='idle'] {
+  opacity: 1 !important;
+}
+
 /* ── Brand Story Section ─────────────────────────────────────── */
 
 .lp-brand-story {
