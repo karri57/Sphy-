@@ -1,0 +1,438 @@
+{%- liquid
+  assign has_image = false
+  if section.settings.background_image != blank
+    assign has_image = true
+  endif
+-%}
+
+<div class="section-background lp-golf-section-bg color-{{ section.settings.color_scheme }}"></div>
+
+<div class="lp-golf color-{{ section.settings.color_scheme }} section--{{ section.settings.section_width }}">
+  <div
+    class="lp-golf__inner spacing-style"
+    style="{% render 'spacing-style', settings: section.settings %}"
+  >
+    {%- comment -%} LEFT — copy column {%- endcomment -%}
+    <div class="lp-golf__copy">
+      <div class="lp-golf__pin" aria-hidden="true">
+        <svg width="18" height="44" viewBox="0 0 18 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <line x1="9" y1="16" x2="9" y2="44" stroke="currentColor" stroke-width="1.4"/>
+          <path d="M9 0 L18 6 L18 16 L9 16 L0 16 L0 6 Z" fill="currentColor"/>
+        </svg>
+      </div>
+
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="lp-golf__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <h2 class="lp-golf__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+
+      {%- if section.settings.subtext != blank -%}
+        <p class="lp-golf__sub">{{ section.settings.subtext }}</p>
+      {%- endif -%}
+
+      <div class="lp-golf__ctas">
+        {%- if section.settings.cta1_label != blank -%}
+          <a href="{{ section.settings.cta1_link }}" class="button lp-golf__cta--primary">
+            {{- section.settings.cta1_label -}}
+          </a>
+        {%- endif -%}
+        {%- if section.settings.cta2_label != blank -%}
+          <a href="{{ section.settings.cta2_link }}" class="lp-golf__cta--secondary">
+            {{- section.settings.cta2_label -}}
+          </a>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.badge != blank -%}
+        <p class="lp-golf__badge">{{ section.settings.badge }}</p>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} RIGHT — visual column {%- endcomment -%}
+    <div class="lp-golf__visual">
+      {%- if has_image -%}
+        <div class="lp-golf__image-wrap">
+          {{-
+            section.settings.background_image
+            | image_url: width: 1200
+            | image_tag:
+              loading: 'lazy',
+              class: 'lp-golf__image',
+              widths: '400, 600, 800, 1000, 1200',
+              sizes: '(min-width: 750px) 50vw, 100vw'
+          -}}
+          <div class="lp-golf__image-overlay"></div>
+        </div>
+      {%- else -%}
+        <div class="lp-golf__image-placeholder">
+          <div class="lp-golf__placeholder-inner">
+            <svg width="64" height="64" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+              <circle cx="32" cy="32" r="31" stroke="currentColor" stroke-width="1" opacity="0.2"/>
+              <line x1="32" y1="8" x2="32" y2="56" stroke="currentColor" stroke-width="1" opacity="0.3"/>
+              <line x1="8" y1="32" x2="56" y2="32" stroke="currentColor" stroke-width="1" opacity="0.3"/>
+              <circle cx="32" cy="32" r="4" fill="currentColor" opacity="0.4"/>
+              <path d="M32 12 L40 18 L40 28 L32 28 L24 28 L24 18 Z" fill="currentColor" opacity="0.5"/>
+            </svg>
+            <span>Upload a course or product photo in the theme editor</span>
+          </div>
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.visual_label != blank -%}
+        <div class="lp-golf__visual-label">{{ section.settings.visual_label }}</div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  :root {
+    --golf-green: #1E3A2F;
+    --golf-green-mid: #2D5A3D;
+    --golf-green-light: #4A7C59;
+    --golf-cream: #F5F0E8;
+    --golf-accent: #8FBC8F;
+  }
+
+  .lp-golf {
+    overflow: hidden;
+  }
+
+  .lp-golf__inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    min-height: 480px;
+  }
+
+  .lp-golf__copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    padding: 56px 24px;
+    background-color: var(--golf-green);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .lp-golf__copy::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at top left, rgba(74,124,89,0.18) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .lp-golf__pin {
+    color: var(--golf-accent);
+    margin-bottom: 4px;
+    flex-shrink: 0;
+  }
+
+  .lp-golf__eyebrow {
+    font-size: 0.62rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--golf-accent);
+    font-family: var(--lp-font-sans, var(--font-body--family));
+    margin: 0;
+    font-weight: 400;
+  }
+
+  .lp-golf__heading {
+    font-family: var(--lp-font-serif, var(--font-accent--family));
+    font-size: clamp(2.2rem, 6vw, 3.8rem);
+    font-weight: 300;
+    letter-spacing: 0.01em;
+    line-height: 1.08;
+    color: var(--golf-cream);
+    margin: 0;
+  }
+
+  .lp-golf__sub {
+    font-family: var(--lp-font-sans, var(--font-body--family));
+    font-size: 0.9rem;
+    line-height: 1.8;
+    letter-spacing: 0.025em;
+    color: rgba(245, 240, 232, 0.72);
+    max-width: 44ch;
+    margin: 0;
+  }
+
+  .lp-golf__ctas {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+    margin-top: 8px;
+  }
+
+  .lp-golf__cta--primary {
+    background: var(--golf-cream) !important;
+    color: var(--golf-green) !important;
+    border-color: var(--golf-cream) !important;
+    font-size: 0.68rem !important;
+    letter-spacing: 0.18em !important;
+    text-transform: uppercase !important;
+    border-radius: 0 !important;
+    padding-block: 14px !important;
+    padding-inline: 32px !important;
+    font-weight: 500 !important;
+    transition: background 0.25s ease, color 0.25s ease !important;
+  }
+
+  .lp-golf__cta--primary:hover {
+    background: var(--golf-green-light) !important;
+    color: var(--golf-cream) !important;
+    border-color: var(--golf-green-light) !important;
+  }
+
+  .lp-golf__cta--secondary {
+    font-family: var(--lp-font-sans, var(--font-body--family));
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--golf-accent);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
+    transition: color 0.2s ease;
+    padding-block: 4px;
+  }
+
+  .lp-golf__cta--secondary:hover {
+    color: var(--golf-cream);
+  }
+
+  .lp-golf__badge {
+    font-family: var(--lp-font-sans, var(--font-body--family));
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(245, 240, 232, 0.38);
+    margin: 0;
+    margin-top: 4px;
+    border-top: 1px solid rgba(245, 240, 232, 0.12);
+    padding-top: 16px;
+  }
+
+  .lp-golf__visual {
+    position: relative;
+    min-height: 300px;
+    background: var(--golf-green-mid);
+    overflow: hidden;
+  }
+
+  .lp-golf__image-wrap {
+    position: absolute;
+    inset: 0;
+  }
+
+  .lp-golf__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: saturate(0.88) brightness(0.9);
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), filter 0.4s ease;
+  }
+
+  .lp-golf__visual:hover .lp-golf__image {
+    transform: scale(1.03);
+    filter: saturate(0.95) brightness(0.85);
+  }
+
+  .lp-golf__image-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(30,58,47,0.45) 0%, rgba(30,58,47,0.1) 60%, transparent 100%);
+    pointer-events: none;
+  }
+
+  .lp-golf__image-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--golf-green-mid) 0%, var(--golf-green-light) 100%);
+  }
+
+  .lp-golf__placeholder-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    color: var(--golf-cream);
+    text-align: center;
+    padding: 24px;
+  }
+
+  .lp-golf__placeholder-inner span {
+    font-family: var(--lp-font-sans, var(--font-body--family));
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    opacity: 0.5;
+    max-width: 24ch;
+    line-height: 1.6;
+  }
+
+  .lp-golf__visual-label {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-family: var(--lp-font-sans, var(--font-body--family));
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(245, 240, 232, 0.6);
+    background: rgba(30, 58, 47, 0.65);
+    backdrop-filter: blur(4px);
+    padding: 6px 12px;
+    pointer-events: none;
+  }
+
+  @media screen and (min-width: 750px) {
+    .lp-golf__inner {
+      grid-template-columns: 1fr 1fr;
+      min-height: 580px;
+    }
+
+    .lp-golf__copy {
+      padding: 72px 56px;
+    }
+
+    .lp-golf__visual {
+      min-height: unset;
+    }
+
+    .lp-golf__ctas {
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+
+  @media screen and (min-width: 1100px) {
+    .lp-golf__inner {
+      min-height: 640px;
+    }
+
+    .lp-golf__copy {
+      padding: 88px 72px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Golf — Feature Section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Now Available — Golf"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Faith on the Fairway."
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "Headcovers, attire, and accessories built for those who carry their conviction from the streets to the greens. The course has a dress code. Ours goes deeper."
+    },
+    {
+      "type": "text",
+      "id": "cta1_label",
+      "label": "Primary button label",
+      "default": "Shop Golf"
+    },
+    {
+      "type": "url",
+      "id": "cta1_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "text",
+      "id": "cta2_label",
+      "label": "Secondary link label",
+      "default": "View All Collections"
+    },
+    {
+      "type": "url",
+      "id": "cta2_link",
+      "label": "Secondary link"
+    },
+    {
+      "type": "text",
+      "id": "badge",
+      "label": "Footer badge text (optional)",
+      "info": "E.g. 'First drop — limited units'"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Right panel image",
+      "info": "Course or product photo — portrait or square works best"
+    },
+    {
+      "type": "text",
+      "id": "visual_label",
+      "label": "Image caption label (optional)",
+      "info": "Small text overlaid bottom-right of the image, e.g. 'Summer 2026 Drop'"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Width",
+      "options": [
+        { "value": "page-width", "label": "Page width" },
+        { "value": "full-width", "label": "Full width" }
+      ],
+      "default": "full-width"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Golf — Feature Section"
+    }
+  ]
+}
+{% endschema %}
