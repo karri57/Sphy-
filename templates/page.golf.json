@@ -1,0 +1,225 @@
+{
+  "sections": {
+    "golf_hero_main": {
+      "type": "golf-hero",
+      "name": "Golf Hero",
+      "settings": {
+        "eyebrow": "KarrionAmir — Golf",
+        "heading": "Faith on the Fairway.",
+        "subtext": "Headcovers, attire, and accessories built for those who carry their conviction from the streets to the greens. The course has a dress code. Ours goes deeper.",
+        "cta1_label": "Shop Golf",
+        "cta1_link": "/collections/golf",
+        "cta2_label": "View All Collections",
+        "cta2_link": "/collections/all",
+        "badge": "First Drop — Limited Units",
+        "visual_label": "Summer 2026 Drop",
+        "color_scheme": "scheme-1",
+        "section_width": "full-width",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "golf_manifesto": {
+      "type": "brand-story",
+      "name": "Golf Manifesto",
+      "settings": {
+        "eyebrow": "The Course Has a Dress Code",
+        "heading": "We Made One That Goes Deeper.",
+        "body": "Golf has always carried a code — what you wear signals who you are. We took that seriously.\n\nKarrionAmir Golf is built for the believer who steps onto the course and doesn't leave their faith in the bag. Every headcover, every piece of attire, every accessory is rooted in the same conviction we bring to the streets: your wardrobe is a statement of who you follow.\n\nFaith on the fairway. Conviction in every swing.",
+        "cta_label": "Shop Golf Collection",
+        "cta_link": "/collections/golf",
+        "color_scheme": "scheme-5",
+        "section_width": "full-width",
+        "padding-block-start": 72,
+        "padding-block-end": 72
+      }
+    },
+    "golf_products": {
+      "type": "product-list",
+      "blocks": {
+        "static-header": {
+          "type": "_product-list-content",
+          "static": true,
+          "settings": {
+            "content_direction": "row",
+            "vertical_on_mobile": false,
+            "horizontal_alignment": "space-between",
+            "vertical_alignment": "flex-end",
+            "align_baseline": true,
+            "horizontal_alignment_flex_direction_column": "flex-start",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 12,
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "custom_height": 100,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "golf_list_heading": {
+              "type": "_product-list-text",
+              "name": "Golf Products Heading",
+              "settings": {
+                "text": "<h3>Golf Collection</h3>",
+                "width": "fit-content",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "h2",
+                "font": "var(--font-primary--family)",
+                "font_size": "",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "golf_list_btn": {
+              "type": "_product-list-button",
+              "name": "View All Golf",
+              "settings": {
+                "label": "View all",
+                "open_in_new_tab": false,
+                "style_class": "link",
+                "width": "fit-content",
+                "custom_width": 100,
+                "width_mobile": "fit-content",
+                "custom_width_mobile": 100
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": ["golf_list_heading", "golf_list_btn"]
+        },
+        "static-product-card": {
+          "type": "_product-card",
+          "name": "Product Card",
+          "static": true,
+          "settings": {
+            "product_card_gap": 4,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "golf_card_gallery": {
+              "type": "_product-card-gallery",
+              "name": "Product Image",
+              "settings": {
+                "image_ratio": "adapt",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "golf_card_title": {
+              "type": "product-title",
+              "name": "Product Title",
+              "settings": {
+                "width": "fit-content",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "paragraph",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 4,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "golf_card_price": {
+              "type": "price",
+              "name": "Price",
+              "settings": {
+                "show_sale_price_first": true,
+                "show_installments": false,
+                "show_tax_info": false,
+                "type_preset": "h6",
+                "width": "100%",
+                "alignment": "left",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "color": "var(--color-foreground)",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": ["golf_card_gallery", "golf_card_title", "golf_card_price"]
+        }
+      },
+      "name": "Golf Products",
+      "settings": {
+        "collection": "golf",
+        "layout_type": "grid",
+        "carousel_on_mobile": false,
+        "max_products": 12,
+        "columns": 4,
+        "mobile_columns": "2",
+        "mobile_card_size": "60cqw",
+        "columns_gap": 8,
+        "rows_gap": 24,
+        "icons_style": "arrow",
+        "icons_shape": "none",
+        "section_width": "page-width",
+        "horizontal_alignment": "center",
+        "gap": 28,
+        "color_scheme": "scheme-1",
+        "padding-block-start": 48,
+        "padding-block-end": 72
+      }
+    }
+  },
+  "order": ["golf_hero_main", "golf_manifesto", "golf_products"]
+}
