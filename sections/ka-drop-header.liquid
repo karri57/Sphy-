@@ -1,0 +1,96 @@
+<div class="ka-drop-header color-{{ section.settings.color_scheme }}">
+  <div class="ka-drop-header__inner">
+    {%- if section.settings.label != blank -%}
+      <span class="ka-drop-header__label">{{ section.settings.label }}</span>
+    {%- endif -%}
+    <h1 class="ka-drop-header__title">{{ section.settings.title }}</h1>
+    {%- if section.settings.subtitle != blank -%}
+      <p class="ka-drop-header__sub">{{ section.settings.subtitle }}</p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .ka-drop-header {
+    border-bottom: 1px solid #0a0a0a;
+    padding: 48px 24px 32px;
+  }
+
+  .ka-drop-header__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .ka-drop-header__label {
+    display: block;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    opacity: 0.5;
+    margin-bottom: 8px;
+  }
+
+  .ka-drop-header__title {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: clamp(2rem, 8vw, 5rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    line-height: 1;
+    margin: 0;
+  }
+
+  .ka-drop-header__sub {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.04em;
+    margin: 14px 0 0;
+    opacity: 0.6;
+    max-width: 60ch;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ka-drop-header {
+      padding: 64px 48px 40px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Drop Header",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Eyebrow label",
+      "default": "Spring / Summer 2026"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "New Arrivals"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Faith-based streetwear. Wear your conviction."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Drop Header"
+    }
+  ]
+}
+{% endschema %}
