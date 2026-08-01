@@ -9,18 +9,134 @@
  */
 {
   "sections": {
-    "drop_header_ka": {
-      "type": "ka-drop-header",
-      "name": "Drop Header",
+    "ka_hero": {
+      "type": "hero",
+      "name": "Campaign Hero",
+      "blocks": {
+        "eyebrow": {
+          "type": "text",
+          "name": "Season Label",
+          "settings": {
+            "text": "<p>SS'26 Drop 1</p>",
+            "width": "fill",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "paragraph",
+            "font": "var(--font-body--family)",
+            "font_size": "0.65rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "uppercase",
+            "wrap": "pretty",
+            "color": "",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 4,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "heading": {
+          "type": "text",
+          "name": "Main Heading",
+          "settings": {
+            "text": "<h1>New Arrivals</h1>",
+            "width": "fill",
+            "max_width": "narrow",
+            "alignment": "left",
+            "type_preset": "h1",
+            "font": "var(--font-primary--family)",
+            "font_size": "",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 8,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "subtext": {
+          "type": "text",
+          "name": "Description",
+          "settings": {
+            "text": "<p>Faith-based streetwear built on conviction — pieces that carry meaning in every thread.</p>",
+            "width": "fill",
+            "max_width": "narrow",
+            "alignment": "left",
+            "type_preset": "paragraph",
+            "font": "var(--font-body--family)",
+            "font_size": "0.82rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "cta": {
+          "type": "button",
+          "name": "CTA Button",
+          "settings": {
+            "label": "Shop Collection",
+            "link": "/collections/all",
+            "open_in_new_tab": false,
+            "style_class": "button--secondary",
+            "width": "fit-content",
+            "custom_width": 100,
+            "width_mobile": "fit-content",
+            "custom_width_mobile": 100
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": ["eyebrow", "heading", "subtext", "cta"],
       "settings": {
-        "label": "Spring / Summer 2026",
-        "title": "New Arrivals",
-        "subtitle": "Faith-based streetwear. Wear your conviction.",
-        "color_scheme": "scheme-1"
+        "media_type_1": "image",
+        "media_type_2": "image",
+        "stack_media_on_mobile": false,
+        "custom_mobile_media": false,
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "flex-end",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "flex-end",
+        "gap": 8,
+        "section_width": "full-width",
+        "section_height": "full-screen",
+        "color_scheme": "scheme-5",
+        "toggle_overlay": true,
+        "overlay_color": "#00000033",
+        "overlay_style": "gradient",
+        "gradient_direction": "to top",
+        "blurred_reflection": false,
+        "reflection_opacity": 75,
+        "padding-block-start": 0,
+        "padding-block-end": 56
       }
     },
-    "all_products_ka": {
+    "ka_new_arrivals": {
       "type": "product-list",
+      "name": "New Arrivals",
       "blocks": {
         "static-header": {
           "type": "_product-list-content",
@@ -55,16 +171,16 @@
             "padding-inline-end": 0
           },
           "blocks": {
-            "shop_all_label": {
+            "new_arrivals_label": {
               "type": "_product-list-text",
               "name": "Section Label",
               "settings": {
-                "text": "<h3>Shop All</h3>",
+                "text": "<p>New Arrivals</p>",
                 "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "left",
-                "type_preset": "h2",
-                "font": "var(--font-primary--family)",
+                "type_preset": "paragraph",
+                "font": "var(--font-body--family)",
                 "font_size": "",
                 "line_height": "normal",
                 "letter_spacing": "normal",
@@ -81,11 +197,11 @@
               },
               "blocks": {}
             },
-            "view_all_btn": {
+            "shop_all_btn": {
               "type": "_product-list-button",
               "name": "View All Button",
               "settings": {
-                "label": "View all",
+                "label": "Shop New Arrivals",
                 "open_in_new_tab": false,
                 "style_class": "link",
                 "width": "fit-content",
@@ -96,7 +212,7 @@
               "blocks": {}
             }
           },
-          "block_order": ["shop_all_label", "view_all_btn"]
+          "block_order": ["new_arrivals_label", "shop_all_btn"]
         },
         "static-product-card": {
           "type": "_product-card",
@@ -120,7 +236,7 @@
               "type": "_product-card-gallery",
               "name": "Product Image",
               "settings": {
-                "image_ratio": "square",
+                "image_ratio": "adapt",
                 "border": "none",
                 "border_width": 1,
                 "border_opacity": 100,
@@ -141,7 +257,7 @@
                 "alignment": "left",
                 "type_preset": "paragraph",
                 "font": "var(--font-body--family)",
-                "font_size": "0.78rem",
+                "font_size": "0.75rem",
                 "line_height": "normal",
                 "letter_spacing": "normal",
                 "case": "none",
@@ -151,7 +267,7 @@
                 "background_color": "#00000026",
                 "corner_radius": 0,
                 "padding-block-start": 8,
-                "padding-block-end": 0,
+                "padding-block-end": 2,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
               },
@@ -168,12 +284,12 @@
                 "width": "100%",
                 "alignment": "left",
                 "font": "var(--font-body--family)",
-                "font_size": "0.78rem",
+                "font_size": "0.75rem",
                 "line_height": "normal",
                 "letter_spacing": "normal",
                 "case": "none",
                 "color": "var(--color-foreground)",
-                "padding-block-start": 2,
+                "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
@@ -184,46 +300,26 @@
           "block_order": ["card_gallery", "card_title", "card_price"]
         }
       },
-      "name": "Shop All Products",
       "settings": {
         "collection": "frontpage",
         "layout_type": "grid",
         "carousel_on_mobile": false,
-        "max_products": 24,
+        "max_products": 8,
         "columns": 4,
         "mobile_columns": "2",
         "mobile_card_size": "50cqw",
-        "columns_gap": 1,
-        "rows_gap": 32,
+        "columns_gap": 12,
+        "rows_gap": 40,
         "icons_style": "arrow",
         "icons_shape": "none",
         "section_width": "page-width",
         "horizontal_alignment": "center",
-        "gap": 0,
+        "gap": 24,
         "color_scheme": "scheme-1",
-        "padding-block-start": 32,
-        "padding-block-end": 64
-      }
-    },
-    "golf_drop_ka": {
-      "type": "golf-hero",
-      "name": "Golf Drop",
-      "settings": {
-        "eyebrow": "Now Available — Golf",
-        "heading": "Faith on the Fairway.",
-        "subtext": "Headcovers, attire, and accessories for those who carry their conviction to the course.",
-        "cta1_label": "Shop Golf",
-        "cta1_link": "/collections/golf",
-        "cta2_label": "Learn More",
-        "cta2_link": "/pages/golf",
-        "badge": "First Drop — Limited Units",
-        "visual_label": "Summer 2026",
-        "color_scheme": "scheme-1",
-        "section_width": "full-width",
-        "padding-block-start": 0,
-        "padding-block-end": 0
+        "padding-block-start": 48,
+        "padding-block-end": 80
       }
     }
   },
-  "order": ["drop_header_ka", "all_products_ka", "golf_drop_ka"]
+  "order": ["ka_hero", "ka_new_arrivals"]
 }
