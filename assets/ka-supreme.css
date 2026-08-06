@@ -74,32 +74,6 @@ header-component[transparent] {
   transition: background var(--ka-speed) ease, border-color var(--ka-speed) ease;
 }
 
-/* Transparent state over hero */
-header-component[transparent]:not([data-sticky-state='active']) {
-  background: transparent !important;
-  border-bottom-color: transparent !important;
-}
-
-/* Gradient scrim: text readable over dark images */
-header-component[transparent] .header__underlay-closed {
-  height: 100% !important;
-  background: linear-gradient(180deg, rgba(0,0,0,0.38) 0%, rgba(0,0,0,0) 100%) !important;
-}
-
-/* White text when header is over the hero */
-header-component[transparent]:not([data-sticky-state='active']) .header__row,
-header-component[transparent]:not([data-sticky-state='active']) .header__row--top,
-header-component[transparent]:not([data-sticky-state='active']) .header__row--bottom {
-  --color-foreground:     255, 255, 255 !important;
-  --color-foreground-rgb: 255, 255, 255 !important;
-  --color-background:     0, 0, 0 !important;
-}
-
-/* Fix Tinker's idle opacity bug */
-header-component[transparent][data-sticky-state='idle'] {
-  opacity: 1 !important;
-}
-
 /* Nav links */
 .menu-list__link,
 .header__menu a,
@@ -131,55 +105,6 @@ header-component[transparent][data-sticky-state='idle'] {
   color: var(--ka-white) !important;
   border-radius: 0 !important;
   font-size: 0.6rem !important;
-}
-
-/* ── Hero Section ────────────────────────────────────────── */
-.hero { color: var(--ka-white); }
-
-/* Display serif for hero headline */
-.hero h1 {
-  font-family: var(--ka-display) !important;
-  font-size: clamp(2.6rem, 7vw, 6rem) !important;
-  font-weight: 400 !important;
-  line-height: 1.02 !important;
-  letter-spacing: -0.025em !important;
-  text-transform: none !important;
-  max-width: 13ch;
-  margin: 0;
-}
-
-.hero h2 {
-  font-family: var(--ka-display) !important;
-  font-weight: 400 !important;
-  text-transform: none !important;
-}
-
-.hero p,
-.hero span {
-  font-family: var(--ka-font) !important;
-  font-size: 0.82rem !important;
-  line-height: 1.65 !important;
-  opacity: 0.85;
-}
-
-/* Ghost/outlined button for dark hero */
-.hero .button--secondary,
-.hero button.button--secondary {
-  background: transparent !important;
-  color: var(--ka-white) !important;
-  border: 1px solid rgba(255,255,255,0.75) !important;
-  font-size: 0.68rem !important;
-  letter-spacing: 0.14em !important;
-  text-transform: uppercase !important;
-  padding: 11px 24px !important;
-  width: auto !important;
-  font-weight: 400 !important;
-}
-
-.hero .button--secondary:hover {
-  background: var(--ka-white) !important;
-  color: var(--ka-ink) !important;
-  border-color: var(--ka-white) !important;
 }
 
 /* ── Product Grid ────────────────────────────────────────── */
