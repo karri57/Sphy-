@@ -5,68 +5,87 @@
   endif
 -%}
 
-<div class="ka-pgrid color-{{ section.settings.color_scheme }}">
+<div class="ka-pgrid">
   <div class="ka-pgrid__inner">
     {%- for product in collection_obj.products limit: section.settings.max_products -%}
+      {%- assign first_variant = product.selected_or_first_available_variant -%}
+
       <div class="ka-pgrid__item">
-        <a href="{{ product.url }}" class="ka-pgrid__img-link" tabindex="-1" aria-label="{{ product.title }}">
-          {%- if product.featured_image != blank -%}
-            {{
-              product.featured_image
-              | image_url: width: 900
-              | image_tag:
-                class: 'ka-pgrid__img',
-                alt: product.featured_image.alt | default: product.title,
-                loading: 'lazy',
-                width: product.featured_image.width,
-                height: product.featured_image.height,
-                sizes: '(min-width: 750px) 25vw, 50vw',
-                widths: '300, 450, 600, 900'
-            }}
-          {%- else -%}
-            {{ 'product-apparel-1' | placeholder_svg_tag: 'ka-pgrid__img ka-pgrid__img--placeholder' }}
-          {%- endif -%}
+        <a href="{{ product.url }}" class="ka-pgrid__img-wrap" tabindex="-1" aria-label="{{ product.title | escape }}">
+          <div class="ka-pgrid__img-box">
+            {%- if product.featured_image != blank -%}
+              {{
+                product.featured_image
+                | image_url: width: 800
+                | image_tag:
+                  class: 'ka-pgrid__img',
+                  alt: product.featured_image.alt | default: product.title,
+                  loading: 'lazy',
+                  width: product.featured_image.width,
+                  height: product.featured_image.height,
+                  sizes: '(min-width: 750px) 25vw, 50vw',
+                  widths: '300, 450, 600, 800'
+              }}
+            {%- else -%}
+              {{ 'product-apparel-1' | placeholder_svg_tag: 'ka-pgrid__img ka-pgrid__placeholder' }}
+            {%- endif -%}
+          </div>
         </a>
 
         <div class="ka-pgrid__info">
           <a href="{{ product.url }}" class="ka-pgrid__text-link">
             <p class="ka-pgrid__name">{{ product.title }}</p>
             {%- unless product.variants.first.title == 'Default Title' -%}
-              <p class="ka-pgrid__variant">{{ product.variants.first.title }}</p>
+              <p class="ka-pgrid__sub">{{ product.variants.first.title }}</p>
             {%- endunless -%}
             <p class="ka-pgrid__price">{{ product.price | money }}</p>
           </a>
 
-          {%- render 'quick-add', product: product, section_id: section.id -%}
+          {%- if product.variants.size == 1 -%}
+            {%- form 'product', product, class: 'ka-pgrid__form' -%}
+              <input type="hidden" name="id" value="{{ first_variant.id }}">
+              <input type="hidden" name="quantity" value="1">
+              <button
+                type="submit"
+                class="ka-pgrid__atc"
+                {%- unless first_variant.available %} disabled{%- endunless -%}
+              >
+                {%- if first_variant.available -%}Add to Cart{%- else -%}Sold Out{%- endif -%}
+              </button>
+            {%- endform -%}
+          {%- else -%}
+            <a href="{{ product.url }}" class="ka-pgrid__atc">Choose Options</a>
+          {%- endif -%}
         </div>
       </div>
+
     {%- else -%}
-      <p class="ka-pgrid__empty">No products found in this collection.</p>
+      <p class="ka-pgrid__empty">No products found.</p>
     {%- endfor -%}
   </div>
 </div>
 
 {% stylesheet %}
   .ka-pgrid {
+    background: #F4F2EE;
     padding: 24px 16px 72px;
   }
 
   .ka-pgrid__inner {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 48px 16px;
+    column-gap: 14px;
+    row-gap: 48px;
     max-width: 1280px;
     margin: 0 auto;
   }
 
   @media screen and (min-width: 750px) {
-    .ka-pgrid {
-      padding: 48px 32px 96px;
-    }
-
+    .ka-pgrid { padding: 48px 32px 96px; }
     .ka-pgrid__inner {
       grid-template-columns: repeat(4, 1fr);
-      gap: 56px 24px;
+      column-gap: 20px;
+      row-gap: 60px;
     }
   }
 
@@ -75,145 +94,122 @@
     flex-direction: column;
   }
 
-  .ka-pgrid__img-link {
+  /* Image area ─────────────────────────────────── */
+  .ka-pgrid__img-wrap {
     display: block;
     text-decoration: none;
   }
 
-  .ka-pgrid__img,
-  .ka-pgrid__img--placeholder {
-    display: block;
+  .ka-pgrid__img-box {
     width: 100%;
     aspect-ratio: 1 / 1;
+    background: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .ka-pgrid__img,
+  .ka-pgrid__placeholder {
+    width: 100%;
+    height: 100%;
     object-fit: contain;
     object-position: center;
+    display: block;
     transition: opacity 0.2s ease;
   }
 
-  .ka-pgrid__img-link:hover .ka-pgrid__img { opacity: 0.87; }
+  .ka-pgrid__img-wrap:hover .ka-pgrid__img { opacity: 0.88; }
 
+  /* Info area ─────────────────────────────────── */
   .ka-pgrid__info {
-    margin-top: 18px;
-    text-align: center;
+    margin-top: 14px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0;
+    text-align: center;
   }
 
   .ka-pgrid__text-link {
     display: block;
-    text-decoration: none;
     width: 100%;
+    text-decoration: none;
+    color: inherit;
   }
 
   .ka-pgrid__name {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 0.63rem;
+    font-size: 0.6rem;
     font-weight: 400;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: #141414;
-    margin: 0 0 3px;
-    line-height: 1.4;
+    margin: 0 0 2px;
+    line-height: 1.5;
   }
 
-  .ka-pgrid__variant {
+  .ka-pgrid__sub {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 0.63rem;
+    font-size: 0.6rem;
     font-weight: 400;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: #141414;
-    margin: 0 0 4px;
-    line-height: 1.4;
+    margin: 0 0 3px;
+    line-height: 1.5;
   }
 
   .ka-pgrid__price {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 0.63rem;
+    font-size: 0.6rem;
     font-weight: 400;
     letter-spacing: 0.06em;
     color: #141414;
-    margin: 0 0 12px;
+    margin: 0 0 10px;
   }
 
-  /* ── Override quick-add: remove overlay, show below price ── */
-  .ka-pgrid quick-add-component.quick-add {
-    position: static !important;
-    inset: auto !important;
-    z-index: auto !important;
-    pointer-events: all !important;
+  /* Native Add to Cart button ─────────────────── */
+  .ka-pgrid__form { width: 100%; }
+
+  .ka-pgrid__atc {
+    display: block;
     width: 100%;
-    background: transparent !important;
-    display: block !important;
+    background: #141414;
+    color: #FFFFFF;
+    border: 1px solid #141414;
+    border-radius: 0;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 0.58rem;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 10px 8px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: background 0.18s ease, color 0.18s ease;
+    box-sizing: border-box;
+    -webkit-appearance: none;
   }
 
-  .ka-pgrid .quick-add__product-form-component {
-    width: 100%;
+  .ka-pgrid__atc:hover {
+    background: #FFFFFF;
+    color: #141414;
+    text-decoration: none;
   }
 
-  .ka-pgrid .quick-add__product-form-component form {
-    width: 100%;
-  }
-
-  .ka-pgrid .quick-add__button,
-  .ka-pgrid .quick-add__button--add,
-  .ka-pgrid .quick-add__button--choose {
-    /* Reset overlay positioning */
-    position: static !important;
-    right: auto !important;
-    bottom: auto !important;
-    inset: auto !important;
-    /* Reset overlay styles */
-    opacity: 1 !important;
-    display: block !important;
-    backdrop-filter: none !important;
-    border-radius: 0 !important;
-    height: auto !important;
-    pointer-events: all !important;
-    /* Button appearance */
-    width: 100% !important;
-    background: #141414 !important;
-    background-image: none !important;
-    color: #F4F2EE !important;
-    border: 1px solid #141414 !important;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
-    font-size: 0.58rem !important;
-    font-weight: 400 !important;
-    letter-spacing: 0.18em !important;
-    text-transform: uppercase !important;
-    padding: 11px 8px !important;
-    cursor: pointer !important;
-    transition: background 0.2s, color 0.2s !important;
-  }
-
-  .ka-pgrid .quick-add__button:hover,
-  .ka-pgrid .quick-add__button--add:hover,
-  .ka-pgrid .quick-add__button--choose:hover {
-    background: #F4F2EE !important;
-    color: #141414 !important;
-  }
-
-  /* Hide the ATC cart icon — text only */
-  .ka-pgrid .add-to-cart-icon { display: none !important; }
-
-  /* Show the text content properly */
-  .ka-pgrid .add-to-cart-text__content { display: block !important; }
-  .ka-pgrid .add-to-cart-text__content > span > span { padding: 0 !important; }
-
-  /* Visually hidden live region — don't show */
-  .ka-pgrid .visually-hidden {
-    position: absolute !important;
-    width: 1px !important;
-    height: 1px !important;
-    overflow: hidden !important;
-    clip: rect(0,0,0,0) !important;
+  .ka-pgrid__atc:disabled {
+    background: #CCCCCA;
+    border-color: #CCCCCA;
+    color: #FFFFFF;
+    cursor: not-allowed;
   }
 
   .ka-pgrid__empty {
     grid-column: 1 / -1;
     text-align: center;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 0.82rem;
     color: #8A8A86;
     padding: 64px 0;
@@ -227,23 +223,16 @@
     {
       "type": "collection",
       "id": "collection",
-      "label": "Collection",
-      "info": "Select which collection to display"
+      "label": "Collection"
     },
     {
       "type": "range",
       "id": "max_products",
-      "label": "Max products to show",
+      "label": "Products to show",
       "min": 2,
       "max": 48,
       "step": 2,
       "default": 24
-    },
-    {
-      "type": "color_scheme",
-      "id": "color_scheme",
-      "label": "Color scheme",
-      "default": "scheme-1"
     }
   ],
   "presets": [

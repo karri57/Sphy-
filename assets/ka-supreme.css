@@ -290,10 +290,10 @@ details summary,
 }
 
 /* ── Buttons ─────────────────────────────────────────────── */
-.button,
-button.button,
+.button:not(.quick-add__button):not([class*="quick-add"]),
+button.button:not(.quick-add__button):not([class*="quick-add"]),
 input[type="submit"],
-.btn {
+.btn:not(.quick-add__button) {
   background: var(--ka-ink) !important;
   color: var(--ka-white) !important;
   border: 1px solid var(--ka-ink) !important;
@@ -309,8 +309,8 @@ input[type="submit"],
   width: 100%;
 }
 
-.button:hover,
-button.button:hover {
+.button:not(.quick-add__button):hover,
+button.button:not(.quick-add__button):hover {
   background: var(--ka-cream) !important;
   color: var(--ka-ink) !important;
 }
@@ -328,13 +328,21 @@ button.button:hover {
   color: var(--ka-white) !important;
 }
 
-.buy-buttons-block .button,
-[class*="add-to-cart"],
-[class*="atc-button"],
-form[action*="cart/add"] .button {
+.buy-buttons-block .button:not(.quick-add__button),
+form[action*="cart/add"] .button:not(.quick-add__button) {
   font-size: 0.7rem !important;
   letter-spacing: 0.16em !important;
   padding: 18px 32px !important;
+}
+
+/* Ensure quick-add overlays never go black */
+.quick-add__button,
+[class*="quick-add"] .button,
+quick-add-component {
+  background: transparent !important;
+  color: inherit !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 /* ── Social Proof ────────────────────────────────────────── */
