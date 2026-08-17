@@ -216,6 +216,178 @@
       }
 
       scheduleToast();
+
+      /* ── VIP / Newsletter Price (10% off) ────────────────── */
+      if (document.querySelector('[data-template*="product"]')) {
+        function kaInjectVip() {
+          if (document.getElementById('ka-vip-line')) return;
+          var priceEl = document.querySelector(
+            '.price__regular .money, .price-item--regular, [class*="price-item"] .money, .price .money'
+          );
+          if (!priceEl) return;
+          var raw = priceEl.textContent.replace(/[^0-9.]/g, '');
+          var price = parseFloat(raw);
+          if (!price) return;
+          var vip = (price * 0.9).toFixed(2).replace(/\.00$/, '');
+          var symbol = priceEl.textContent.includes('$') ? '$' : '';
+          var line = document.createElement('p');
+          line.id = 'ka-vip-line';
+          line.className = 'ka-vip-line';
+          line.innerHTML = 'Get it for <strong>' + symbol + vip + '</strong> — <a href="/account/register" class="ka-vip-link">join our newsletter today!</a>';
+          var priceBlock = priceEl.closest('[class*="price"], .product__price, [class*="price-block"]');
+          if (priceBlock && priceBlock.parentNode) {
+            priceBlock.parentNode.insertBefore(line, priceBlock.nextSibling);
+          }
+        }
+        document.readyState === 'loading'
+          ? document.addEventListener('DOMContentLoaded', kaInjectVip)
+          : kaInjectVip();
+      }
+
+      /* ── Wishlist Star Button ─────────────────────────────── */
+      if (document.querySelector('[data-template*="product"]')) {
+        var kaLoggedIn = {% if customer %}true{% else %}false{% endif %};
+        var KA_WL = 'ka_wishlist';
+        var kaModal = null;
+
+        function kaGetWl() { try { return JSON.parse(localStorage.getItem(KA_WL) || '[]'); } catch(e) { return []; } }
+        function kaSaveWl(w) { try { localStorage.setItem(KA_WL, JSON.stringify(w)); } catch(e) {} }
+
+        function kaStarSvg(filled) {
+          return '<svg width="22" height="22" viewBox="0 0 24 24" fill="' + (filled ? 'currentColor' : 'none') + '" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+        }
+
+        function kaOpenModal() {
+          kaModal.removeAttribute('hidden');
+          document.body.style.overflow = 'hidden';
+        }
+        function kaCloseModal() {
+          kaModal.setAttribute('hidden', '');
+          document.body.style.overflow = '';
+        }
+
+        function kaBuildModal() {
+          kaModal = document.createElement('div');
+          kaModal.id = 'ka-wishlist-modal';
+          kaModal.setAttribute('hidden', '');
+          kaModal.innerHTML = '<div class="ka-modal-bg" id="ka-modal-bg"></div>'
+            + '<div class="ka-modal-box">'
+            + '<button class="ka-modal-close" id="ka-modal-x" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>'
+            + '<div class="ka-modal-star">' + kaStarSvg(false) + '</div>'
+            + '<h2 class="ka-modal-title">Save to Favorites</h2>'
+            + '<p class="ka-modal-text">Create a free account to save your favorites and access them anytime.</p>'
+            + '<div class="ka-modal-actions">'
+            + '<a href="/account/register" class="ka-modal-btn ka-modal-btn--primary">Create Account</a>'
+            + '<a href="/account/login" class="ka-modal-btn ka-modal-btn--secondary">Sign In</a>'
+            + '</div></div>';
+          document.body.appendChild(kaModal);
+          document.getElementById('ka-modal-x').addEventListener('click', kaCloseModal);
+          document.getElementById('ka-modal-bg').addEventListener('click', kaCloseModal);
+          document.addEventListener('keydown', function(e) { if (e.key === 'Escape') kaCloseModal(); });
+        }
+
+        function kaInjectStar() {
+          if (document.getElementById('ka-star-btn')) return;
+          var atcBtn = document.querySelector(
+            '.buy-buttons-block button[type="submit"], button[name="add"], [class*="add-to-cart-button"]:not(.quick-add__button)'
+          );
+          if (!atcBtn) return;
+
+          var productIdInput = document.querySelector('form[action*="/cart/add"] [name="id"], input[name="product-id"]');
+          var pid = productIdInput ? productIdInput.value : null;
+
+          var wl = kaGetWl();
+          var saved = wl.indexOf(pid) !== -1;
+
+          var star = document.createElement('button');
+          star.type = 'button';
+          star.id = 'ka-star-btn';
+          star.className = 'ka-star-btn' + (saved ? ' is-saved' : '');
+          star.setAttribute('aria-label', 'Save to favorites');
+          star.innerHTML = kaStarSvg(saved);
+
+          star.addEventListener('click', function() {
+            if (!kaLoggedIn) { kaOpenModal(); return; }
+            var wl2 = kaGetWl();
+            var idx = wl2.indexOf(pid);
+            if (idx === -1) { wl2.push(pid); kaSaveWl(wl2); star.classList.add('is-saved'); star.innerHTML = kaStarSvg(true); }
+            else { wl2.splice(idx, 1); kaSaveWl(wl2); star.classList.remove('is-saved'); star.innerHTML = kaStarSvg(false); }
+          });
+
+          /* Wrap ATC + star in flex row */
+          var row = document.createElement('div');
+          row.className = 'ka-atc-row';
+          var atcParent = atcBtn.parentNode;
+          atcParent.insertBefore(row, atcBtn);
+          row.appendChild(atcBtn);
+          row.appendChild(star);
+        }
+
+        kaBuildModal();
+        document.readyState === 'loading'
+          ? document.addEventListener('DOMContentLoaded', kaInjectStar)
+          : kaInjectStar();
+      }
+
+      /* ── Cart: "Complete Your Outfit" Recommendations ──────── */
+      (function kaCartRecs() {
+        var injected = false;
+        function tryInject() {
+          if (injected) return;
+          var cartItems = document.querySelector(
+            'cart-drawer-items, [class*="cart-drawer__items"], [class*="cart-items"], cart-items'
+          );
+          if (!cartItems) return;
+          var cartForm = document.querySelector('cart-drawer form, [class*="cart-drawer"] form');
+          if (!cartForm) return;
+
+          fetch('/cart.js')
+            .then(function(r) { return r.json(); })
+            .then(function(cart) {
+              if (!cart.items || !cart.items.length) return;
+              var pid = cart.items[0].product_id;
+              return fetch('/recommendations/products.json?product_id=' + pid + '&limit=4&section_id=ka-recs')
+                .then(function(r) { return r.json(); });
+            })
+            .then(function(data) {
+              if (!data || !data.products || !data.products.length) return;
+              injected = true;
+              var recs = data.products.slice(0, 3);
+              var section = document.createElement('div');
+              section.className = 'ka-cart-recs';
+              section.innerHTML = '<p class="ka-cart-recs__title">Complete Your Outfit</p>'
+                + recs.map(function(p) {
+                    var price = '$' + (p.price / 100).toFixed(2).replace('.00', '');
+                    var img = p.images && p.images[0] ? '<img src="' + p.images[0].src + '" alt="' + p.title + '" loading="lazy">' : '';
+                    return '<div class="ka-cart-rec">'
+                      + '<a href="' + p.url + '" class="ka-cart-rec__img-wrap">' + img + '</a>'
+                      + '<div class="ka-cart-rec__info">'
+                      + '<p class="ka-cart-rec__name">' + p.title + '</p>'
+                      + '<p class="ka-cart-rec__price">' + price + '</p>'
+                      + '</div>'
+                      + '<a href="' + p.url + '" class="ka-cart-rec__add">Add +</a>'
+                      + '</div>';
+                  }).join('');
+
+              var footer = document.querySelector('[class*="cart-drawer__footer"], [class*="cart__footer"], cart-drawer footer');
+              var parent = footer ? footer.parentNode : cartForm.parentNode;
+              var ref = footer || cartForm.nextSibling;
+              parent.insertBefore(section, ref);
+            })
+            .catch(function() {});
+        }
+
+        var drawerEl = document.querySelector('cart-drawer, [class*="cart-drawer"]');
+        if (drawerEl) {
+          new MutationObserver(tryInject).observe(drawerEl, { attributes: true, childList: true, subtree: true });
+        }
+        document.addEventListener('click', function(e) {
+          if (e.target.closest('[href*="/cart"], [class*="cart-icon"], [class*="cart-toggle"]')) {
+            setTimeout(tryInject, 600);
+          }
+        });
+      })();
+
     })();
     </script>
   </body>
