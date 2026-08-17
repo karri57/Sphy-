@@ -86,14 +86,13 @@
             </div>
           </a>
 
-          <!-- Image dots (static indicator) -->
-          {%- if product.images.size > 1 -%}
-            <div class="ka-pgrid__cdots" aria-hidden="true">
-              {%- for i in (1..product.images.size) limit: 4 -%}
-                <span class="ka-pgrid__cdot{% if forloop.first %} is-act{% endif %}"></span>
-              {%- endfor -%}
-            </div>
-          {%- endif -%}
+          <!-- Image dots — always render to keep all card heights equal -->
+          <div class="ka-pgrid__cdots" aria-hidden="true">
+            {%- assign dot_count = product.images.size | at_least: 1 | at_most: 4 -%}
+            {%- for i in (1..dot_count) -%}
+              <span class="ka-pgrid__cdot{% if forloop.first %} is-act{% endif %}"></span>
+            {%- endfor -%}
+          </div>
 
         </div><!-- /.ka-pgrid__card -->
 
@@ -264,6 +263,7 @@
 
   .ka-pgrid__img-track {
     display: flex;
+    width: 100%;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
@@ -360,24 +360,24 @@
     align-items: center;
     justify-content: center;
     background: #111111;
-    color: #FFFFFF;
+    color: #FFFFFF !important;
     border: none;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 0.5rem;
+    font-size: 0.6rem;
     font-weight: 700;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    padding: 7px 9px;
+    padding: 9px 11px;
     cursor: pointer;
-    text-decoration: none;
+    text-decoration: none !important;
     white-space: nowrap;
     flex-shrink: 0;
     -webkit-appearance: none;
     transition: background 0.15s;
-    line-height: 1;
+    line-height: 1.2;
   }
 
-  .ka-pgrid__atc-btn:hover:not([disabled]) { background: #333333; color: #FFFFFF; text-decoration: none; }
+  .ka-pgrid__atc-btn:hover:not([disabled]) { background: #333333; color: #FFFFFF !important; text-decoration: none !important; }
   .ka-pgrid__atc-btn[disabled] { opacity: 0.38; cursor: not-allowed; }
 
   /* ── Color swatches ───────────────────────────── */

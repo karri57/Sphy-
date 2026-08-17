@@ -39,21 +39,6 @@ body {
   --color-foreground-rgb: 17, 17, 17;
 }
 
-.color-scheme-5,
-.color-scheme-6 {
-  background: var(--ka-ink) !important;
-  color: var(--ka-white) !important;
-  --color-foreground:     255, 255, 255;
-  --color-foreground-rgb: 255, 255, 255;
-}
-
-/* Sections → white */
-.shopify-section,
-.section-background,
-[class*="product-list"] {
-  background: var(--ka-cream) !important;
-}
-
 /* ── Typography ─────────────────────────────────────────── */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--ka-font);
@@ -68,18 +53,9 @@ a { color: var(--ka-ink); text-decoration: none; }
 a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
 /* ── Header ─────────────────────────────────────────────── */
-header-component {
-  background: var(--ka-cream) !important;
-  border-bottom: var(--ka-border) !important;
-  transition: background var(--ka-speed) ease, border-color var(--ka-speed) ease;
-}
-
-/* Allow transparent mode over hero */
-header-component[transparent],
-header-component.is-transparent {
-  background: transparent !important;
-  border-bottom: none !important;
-}
+/* Tinker renders header as <header-component id="header-component">.
+   We let Tinker handle its own background/transparency logic.
+   Only override nav link fonts and ensure logo max-height. */
 
 /* Nav links */
 .menu-list__link,
