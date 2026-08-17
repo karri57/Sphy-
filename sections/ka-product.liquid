@@ -1,0 +1,1214 @@
+{%- liquid
+  assign cv = product.selected_or_first_available_variant
+  assign vip_cents = cv.price | times: 90 | divided_by: 100
+  assign has_gallery = false
+  for m in product.media
+    if m.media_type == 'image'
+      assign has_gallery = true
+      break
+    endif
+  endfor
+-%}
+
+<div class="kap" id="kap-{{ section.id }}">
+
+  <!-- ──────────────────────────────── Gallery ── -->
+  <div class="kap__gallery">
+    <div class="kap__track" id="kap-track-{{ section.id }}">
+      {%- if has_gallery -%}
+        {%- for media in product.media limit: 12 -%}
+          {%- if media.media_type == 'image' -%}
+            <div class="kap__slide">
+              {{
+                media
+                | image_url: width: 1200
+                | image_tag:
+                  class: 'kap__slide-img',
+                  alt: media.alt | default: product.title,
+                  loading: forloop.first | iif: 'eager', 'lazy',
+                  fetchpriority: forloop.first | iif: 'high', 'auto',
+                  sizes: '100vw',
+                  widths: '375, 750, 1000, 1200'
+              }}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- else -%}
+        <div class="kap__slide">
+          {{ 'product-apparel-1' | placeholder_svg_tag: 'kap__slide-img kap__placeholder' }}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- assign img_count = 0 -%}
+    {%- for m in product.media -%}{%- if m.media_type == 'image' -%}{%- assign img_count = img_count | plus: 1 -%}{%- endif -%}{%- endfor -%}
+
+    {%- if img_count > 1 -%}
+      <button class="kap__arrow kap__arrow--l" id="kap-prev-{{ section.id }}" type="button" aria-label="Previous">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <button class="kap__arrow kap__arrow--r" id="kap-next-{{ section.id }}" type="button" aria-label="Next">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+      <div class="kap__dots" id="kap-dots-{{ section.id }}">
+        {%- assign di = 0 -%}
+        {%- for m in product.media limit: 12 -%}
+          {%- if m.media_type == 'image' -%}
+            <button class="kap__dot{% if di == 0 %} is-active{% endif %}" data-gi="{{ di }}" aria-label="Image {{ di | plus: 1 }}"></button>
+            {%- assign di = di | plus: 1 -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div><!-- /.kap__gallery -->
+
+  <!-- ──────────────────────────────── Info ── -->
+  <div class="kap__info">
+
+    <h1 class="kap__title">{{ product.title | upcase }}</h1>
+
+    <!-- Price + VIP -->
+    <div class="kap__price-block">
+      <div class="kap__price-row">
+        <span class="kap__price" id="kap-price">
+          {%- if cv.compare_at_price > cv.price -%}
+            <span class="kap__sale">{{ cv.price | money_without_trailing_zeros }}</span>&nbsp;<s class="kap__was">{{ cv.compare_at_price | money_without_trailing_zeros }}</s>
+          {%- else -%}
+            {{ cv.price | money_without_trailing_zeros }}
+          {%- endif -%}
+        </span>
+        <span class="kap__tax-badge">TAXES &amp; DUTIES INCLUDED</span>
+      </div>
+      <p class="kap__vip-line">
+        Get it for <strong id="kap-vip">{{ vip_cents | money_without_trailing_zeros }}</strong> —
+        <a href="/account/register" class="kap__vip-a">join our newsletter today!</a>
+      </p>
+    </div>
+
+    <!-- Product form -->
+    {%- form 'product', product, id: 'kap-form-{{ section.id }}', class: 'kap__form' -%}
+      <input type="hidden" name="quantity" value="1">
+      <input type="hidden" name="id" id="kap-vid-{{ section.id }}" value="{{ cv.id }}">
+
+      {%- unless product.has_only_default_variant -%}
+        {%- for option in product.options_with_values -%}
+          <div class="kap__option-group" data-option-pos="{{ option.position }}">
+            <div class="kap__option-btns" role="group" aria-label="{{ option.name }}">
+              {%- for value in option.values -%}
+                {%- assign is_active = option.selected_value == value -%}
+                {%- assign val_available = false -%}
+                {%- for v in product.variants -%}
+                  {%- if v.available -%}
+                    {%- case option.position -%}
+                      {%- when 1 -%}{%- if v.option1 == value -%}{%- assign val_available = true -%}{%- endif -%}
+                      {%- when 2 -%}{%- if v.option2 == value -%}{%- assign val_available = true -%}{%- endif -%}
+                      {%- when 3 -%}{%- if v.option3 == value -%}{%- assign val_available = true -%}{%- endif -%}
+                    {%- endcase -%}
+                  {%- endif -%}
+                {%- endfor -%}
+                <label class="kap__opt{% if is_active %} is-active{% endif %}{% unless val_available %} is-out{% endunless %}">
+                  <input
+                    type="radio"
+                    name="options[{{ option.name | handleize }}]"
+                    value="{{ value | escape }}"
+                    class="kap__opt-radio"
+                    data-opt-pos="{{ option.position }}"
+                    {% if is_active %}checked{% endif %}
+                  >
+                  {{- value -}}
+                </label>
+              {%- endfor -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      {%- endunless -%}
+
+      <!-- ATC + Star -->
+      <div class="kap__buy-row">
+        <button
+          type="submit"
+          class="kap__atc"
+          id="kap-atc-{{ section.id }}"
+          {%- unless cv.available %} disabled{%- endunless -%}
+        >
+          {{- cv.available ? 'ADD TO CART' : 'SOLD OUT' -}}
+        </button>
+        <button type="button" class="kap__star" id="kap-star-{{ section.id }}" aria-label="Save to favorites">
+          <svg class="kap__star-svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+        </button>
+      </div>
+    {%- endform -%}
+
+    {%- if section.settings.model_info != blank -%}
+      <p class="kap__model"><strong>The models are wearing:</strong> {{ section.settings.model_info }}</p>
+    {%- endif -%}
+
+    <!-- Accordions -->
+    <div class="kap__accordions">
+
+      {%- if product.description != blank -%}
+        <details class="kap__acc" open>
+          <summary class="kap__acc-head">
+            <svg class="kap__acc-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+            </svg>
+            <span class="kap__acc-lbl">PRODUCT DETAILS</span>
+            <span class="kap__acc-tog">—</span>
+          </summary>
+          <div class="kap__acc-body rte">{{ product.description }}</div>
+        </details>
+      {%- endif -%}
+
+      <details class="kap__acc">
+        <summary class="kap__acc-head">
+          <svg class="kap__acc-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+            <line x1="7" y1="7" x2="7.01" y2="7"/>
+          </svg>
+          <span class="kap__acc-lbl">SIZE CHART</span>
+          <span class="kap__acc-tog">+</span>
+        </summary>
+        <div class="kap__acc-body">
+          {%- if section.settings.size_chart_image != blank -%}
+            {{ section.settings.size_chart_image | image_url: width: 800 | image_tag: class: 'kap__size-img', loading: 'lazy' }}
+          {%- else -%}
+            <div class="kap__tbl-scroll">
+              <table class="kap__tbl">
+                <thead><tr>
+                  <th></th><th>XS</th><th>S</th><th>M</th><th>L</th><th>XL</th><th>XXL</th>
+                </tr></thead>
+                <tbody>
+                  <tr><td>A – Length</td><td>27"</td><td>28"</td><td>29"</td><td>30"</td><td>31"</td><td>32"</td></tr>
+                  <tr><td>B – Width</td><td>19"</td><td>20"</td><td>22"</td><td>24"</td><td>26"</td><td>28"</td></tr>
+                  <tr><td>C – Sleeve</td><td>8"</td><td>8.5"</td><td>9"</td><td>9.5"</td><td>10"</td><td>10.5"</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="kap__tbl-note">*All measurements may vary up to 1". Garment laid flat.</p>
+          {%- endif -%}
+        </div>
+      </details>
+
+      <details class="kap__acc">
+        <summary class="kap__acc-head">
+          <svg class="kap__acc-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="1" y="3" width="15" height="13"/>
+            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+            <circle cx="5.5" cy="18.5" r="2.5"/>
+            <circle cx="18.5" cy="18.5" r="2.5"/>
+          </svg>
+          <span class="kap__acc-lbl">SHIPPING DETAILS</span>
+          <span class="kap__acc-tog">+</span>
+        </summary>
+        <div class="kap__acc-body">
+          {%- if section.settings.shipping_info != blank -%}
+            <div class="rte">{{ section.settings.shipping_info }}</div>
+          {%- else -%}
+            <p><strong>USA:</strong> 5 – 10 business days.</p>
+            <p><strong>Canada:</strong> 7 – 14 business days.</p>
+            <p><strong>International:</strong> 10 – 21 business days.</p>
+            <p>Orders placed after <strong>3:00 PM EST</strong> will be processed the following business day. Shipping times are estimates.</p>
+            <p>Free returns within 14 days on unworn, unwashed items in original packaging.</p>
+          {%- endif -%}
+        </div>
+      </details>
+
+    </div><!-- /.kap__accordions -->
+  </div><!-- /.kap__info -->
+</div><!-- /.kap -->
+
+<!-- ──────────────────────────────── RECOMMENDED ── -->
+<div class="kap__recs" id="kap-recs-{{ section.id }}">
+  <div class="kap__recs-hd">
+    <h2 class="kap__recs-title">RECOMMENDED</h2>
+    <a href="/collections/all" class="kap__recs-more">
+      <svg width="14" height="10" viewBox="0 0 14 10" fill="none" stroke="currentColor" stroke-width="1.5">
+        <line x1="2" y1="5" x2="12" y2="5"/>
+        <polyline points="8 1 12 5 8 9"/>
+        <polyline points="5 1 1 5 5 9"/>
+      </svg>
+      VIEW MORE
+    </a>
+  </div>
+  <div class="kap__recs-row" id="kap-recs-row-{{ section.id }}">
+    {%- for i in (1..4) -%}
+      <div class="kap__rec kap__rec--ph"></div>
+    {%- endfor -%}
+  </div>
+</div>
+
+<!-- ──────────────────────────────── Sticky ATC ── -->
+<div class="kap__sticky" id="kap-sticky-{{ section.id }}">
+  <button type="button" class="kap__sticky-atc" id="kap-sticky-atc-{{ section.id }}"
+    {%- unless cv.available %} disabled{%- endunless -%}>
+    {{- cv.available ? 'ADD TO CART' : 'SOLD OUT' -}}
+  </button>
+  <button type="button" class="kap__sticky-star" id="kap-sticky-star-{{ section.id }}" aria-label="Save to favorites">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+    </svg>
+  </button>
+</div>
+
+<!-- ──────────────────────────────── Wishlist Modal ── -->
+<div class="kap__modal" id="kap-modal-{{ section.id }}" hidden role="dialog" aria-modal="true">
+  <div class="kap__modal-bg" id="kap-modal-bg-{{ section.id }}"></div>
+  <div class="kap__modal-box">
+    <button class="kap__modal-x" id="kap-modal-x-{{ section.id }}" aria-label="Close">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+    <div class="kap__modal-icon">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.2" stroke-linejoin="round">
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+      </svg>
+    </div>
+    <h2 class="kap__modal-h">Save to Favorites</h2>
+    <p class="kap__modal-p">Create a free account to save your favorites and shop them any time.</p>
+    <div class="kap__modal-btns">
+      <a href="/account/register" class="kap__modal-btn kap__modal-btn--dark">Create Account</a>
+      <a href="/account/login" class="kap__modal-btn kap__modal-btn--light">Sign In</a>
+    </div>
+  </div>
+</div>
+
+<!-- ──────────────────────────────── Data + JS ── -->
+<script type="application/json" id="kap-data-{{ section.id }}">
+{
+  "sid": {{ section.id | json }},
+  "pid": {{ product.id | json }},
+  "variants": {{ product.variants | json }},
+  "loggedIn": {% if customer %}true{% else %}false{% endif %}
+}
+</script>
+
+<script>
+(function() {
+  'use strict';
+  var raw = document.getElementById('kap-data-{{ section.id }}');
+  if (!raw) return;
+  var D = JSON.parse(raw.textContent);
+  var sid = D.sid;
+  var variants = D.variants;
+
+  /* ─── Gallery ─────────────────────────────── */
+  var track   = document.getElementById('kap-track-' + sid);
+  var slides  = track ? Array.from(track.querySelectorAll('.kap__slide')) : [];
+  var dots    = Array.from(document.querySelectorAll('#kap-dots-' + sid + ' .kap__dot'));
+  var gi = 0;
+
+  function gGo(n) {
+    if (!slides.length) return;
+    gi = ((n % slides.length) + slides.length) % slides.length;
+    track.style.transform = 'translateX(-' + (gi * 100) + '%)';
+    dots.forEach(function(d, i) { d.classList.toggle('is-active', i === gi); });
+  }
+
+  var prev = document.getElementById('kap-prev-' + sid);
+  var next = document.getElementById('kap-next-' + sid);
+  if (prev) prev.addEventListener('click', function() { gGo(gi - 1); });
+  if (next) next.addEventListener('click', function() { gGo(gi + 1); });
+  dots.forEach(function(d) { d.addEventListener('click', function() { gGo(parseInt(d.dataset.gi)); }); });
+
+  /* Touch swipe */
+  if (track) {
+    var tX = 0;
+    track.addEventListener('touchstart', function(e) { tX = e.touches[0].clientX; }, { passive: true });
+    track.addEventListener('touchend', function(e) {
+      var diff = tX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 44) gGo(gi + (diff > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+
+  /* ─── Variant picker ─────────────────────── */
+  var form    = document.getElementById('kap-form-' + sid);
+  var vidIn   = document.getElementById('kap-vid-' + sid);
+  var atcBtn  = document.getElementById('kap-atc-' + sid);
+  var sAtcBtn = document.getElementById('kap-sticky-atc-' + sid);
+  var priceEl = document.getElementById('kap-price');
+  var vipEl   = document.getElementById('kap-vip');
+
+  function kMoney(cents) {
+    var d = cents / 100;
+    return '$' + (Number.isInteger(d) ? d : d.toFixed(2));
+  }
+
+  function kFindVariant() {
+    var opts = {};
+    if (!form) return null;
+    form.querySelectorAll('.kap__opt-radio:checked').forEach(function(r) {
+      opts[parseInt(r.dataset.optPos)] = r.value;
+    });
+    return variants.find(function(v) {
+      return Object.keys(opts).every(function(p) {
+        return v['option' + p] === opts[p];
+      });
+    }) || null;
+  }
+
+  function kUpdateVariant() {
+    var v = kFindVariant();
+    if (!v) return;
+
+    if (vidIn) vidIn.value = v.id;
+
+    /* Price */
+    if (priceEl) {
+      if (v.compare_at_price && v.compare_at_price > v.price) {
+        priceEl.innerHTML = '<span class="kap__sale">' + kMoney(v.price) + '</span>&nbsp;<s class="kap__was">' + kMoney(v.compare_at_price) + '</s>';
+      } else {
+        priceEl.textContent = kMoney(v.price);
+      }
+    }
+    if (vipEl) vipEl.textContent = kMoney(Math.round(v.price * 0.9));
+
+    /* ATC buttons */
+    [atcBtn, sAtcBtn].forEach(function(b) {
+      if (!b) return;
+      b.disabled = !v.available;
+      b.textContent = v.available ? 'ADD TO CART' : 'SOLD OUT';
+    });
+
+    /* URL */
+    try { history.replaceState(null, '', '?variant=' + v.id); } catch(e) {}
+
+    /* Active labels */
+    form.querySelectorAll('.kap__opt').forEach(function(lbl) {
+      var r = lbl.querySelector('.kap__opt-radio');
+      if (r) lbl.classList.toggle('is-active', r.checked);
+    });
+  }
+
+  if (form) {
+    form.addEventListener('change', function(e) {
+      if (e.target.classList.contains('kap__opt-radio')) kUpdateVariant();
+    });
+  }
+
+  /* ─── Accordion toggle icons ─────────────── */
+  document.querySelectorAll('#kap-' + sid + ' .kap__acc, .kap__acc').forEach(function(acc) {
+    acc.addEventListener('toggle', function() {
+      var tog = acc.querySelector('.kap__acc-tog');
+      if (tog) tog.textContent = acc.open ? '—' : '+';
+    });
+  });
+
+  /* ─── Sticky ATC ─────────────────────────── */
+  var sticky = document.getElementById('kap-sticky-' + sid);
+  if (sticky && atcBtn && window.IntersectionObserver) {
+    new IntersectionObserver(function(entries) {
+      sticky.classList.toggle('is-visible', !entries[0].isIntersecting);
+    }, { rootMargin: '0px 0px -60px 0px' }).observe(atcBtn);
+
+    var sAtc = document.getElementById('kap-sticky-atc-' + sid);
+    if (sAtc) {
+      sAtc.addEventListener('click', function() {
+        if (form && !sAtc.disabled) {
+          if (form.requestSubmit) form.requestSubmit();
+          else form.submit();
+        }
+      });
+    }
+  }
+
+  /* ─── Wishlist / Star ─────────────────────── */
+  var modal = document.getElementById('kap-modal-' + sid);
+  var KA_WL = 'ka_wl';
+
+  function kwGet() { try { return JSON.parse(localStorage.getItem(KA_WL) || '[]'); } catch(e) { return []; } }
+  function kwSet(w) { try { localStorage.setItem(KA_WL, JSON.stringify(w)); } catch(e) {} }
+
+  function kwOpen() {
+    if (modal) { modal.removeAttribute('hidden'); document.body.style.overflow = 'hidden'; }
+  }
+  function kwClose() {
+    if (modal) { modal.setAttribute('hidden', ''); document.body.style.overflow = ''; }
+  }
+
+  var mX = document.getElementById('kap-modal-x-' + sid);
+  var mBg = document.getElementById('kap-modal-bg-' + sid);
+  if (mX) mX.addEventListener('click', kwClose);
+  if (mBg) mBg.addEventListener('click', kwClose);
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') kwClose(); });
+
+  function kwSvg(filled) {
+    return '<svg width="22" height="22" viewBox="0 0 24 24" fill="' + (filled ? 'currentColor' : 'none') + '" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+  }
+
+  function kwToggle(btn) {
+    if (!D.loggedIn) { kwOpen(); return; }
+    var wl = kwGet();
+    var pid = String(D.pid);
+    var idx = wl.indexOf(pid);
+    if (idx === -1) { wl.push(pid); kwSet(wl); btn.classList.add('is-saved'); btn.querySelector('.kap__star-svg, svg') && (btn.innerHTML = kwSvg(true)); }
+    else { wl.splice(idx, 1); kwSet(wl); btn.classList.remove('is-saved'); btn.innerHTML = kwSvg(false); }
+  }
+
+  /* Sync saved state */
+  var wl0 = kwGet();
+  [document.getElementById('kap-star-' + sid), document.getElementById('kap-sticky-star-' + sid)].forEach(function(btn) {
+    if (!btn) return;
+    if (D.loggedIn && wl0.indexOf(String(D.pid)) !== -1) {
+      btn.classList.add('is-saved');
+      btn.innerHTML = kwSvg(true);
+    }
+    btn.addEventListener('click', function() { kwToggle(btn); });
+  });
+
+  /* ─── Recommendations ─────────────────────── */
+  var recsRow = document.getElementById('kap-recs-row-' + sid);
+  if (recsRow && D.pid) {
+    fetch('/recommendations/products.json?product_id=' + D.pid + '&limit=6')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        var prods = (data.products || []).slice(0, 4);
+        if (!prods.length) {
+          var recsWrap = document.getElementById('kap-recs-' + sid);
+          if (recsWrap) recsWrap.style.display = 'none';
+          return;
+        }
+        recsRow.innerHTML = prods.map(function(p) {
+          var isNew = Array.isArray(p.tags) && (p.tags.indexOf('new') !== -1 || p.tags.indexOf('New') !== -1);
+          var isSale = p.compare_at_price && p.compare_at_price > p.price;
+          var badge = isSale
+            ? '<span class="kap__rec-badge kap__rec-badge--sale">Sale</span>'
+            : isNew ? '<span class="kap__rec-badge kap__rec-badge--new">New In</span>' : '';
+          var img = p.images && p.images[0]
+            ? '<img src="' + p.images[0].src.replace('.jpg', '_400x.jpg').replace('.png', '_400x.png') + '" alt="' + p.title + '" loading="lazy" class="kap__rec-img">'
+            : '';
+          var price = '$' + (p.price / 100).toFixed(2).replace('.00', '');
+          return '<a href="' + p.url + '" class="kap__rec">'
+            + '<div class="kap__rec-img-box">' + badge + img + '</div>'
+            + '<p class="kap__rec-name">' + p.title + '</p>'
+            + '<p class="kap__rec-price">' + price + '</p>'
+            + '</a>';
+        }).join('');
+      })
+      .catch(function() {
+        var recsWrap = document.getElementById('kap-recs-' + sid);
+        if (recsWrap) recsWrap.style.display = 'none';
+      });
+  }
+
+})();
+</script>
+
+{% stylesheet %}
+/* ════════════════════════════════════════════════
+   ka-product — Cold Culture product page
+   ════════════════════════════════════════════════ */
+
+.kap { background: #FFFFFF; }
+
+/* ── Gallery ──────────────────────────────────── */
+.kap__gallery {
+  position: relative;
+  background: #EFEFEF;
+  overflow: hidden;
+  width: 100%;
+}
+
+.kap__track {
+  display: flex;
+  transition: transform 0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+
+.kap__slide {
+  flex: 0 0 100%;
+  width: 100%;
+}
+
+.kap__slide-img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  object-position: center;
+  background: #EFEFEF;
+}
+
+.kap__placeholder {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  display: block;
+}
+
+/* Arrows */
+.kap__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.85);
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+  color: #111;
+  padding: 0;
+  transition: background 0.15s;
+}
+.kap__arrow:hover { background: #FFFFFF; }
+.kap__arrow--l { left: 12px; }
+.kap__arrow--r { right: 12px; }
+
+/* Dots */
+.kap__dots {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 5px;
+  z-index: 2;
+}
+
+.kap__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.25);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.kap__dot.is-active { background: #111111; }
+
+/* ── Info ─────────────────────────────────────── */
+.kap__info {
+  padding: 20px 16px 100px;
+}
+
+@media screen and (min-width: 750px) {
+  .kap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+  .kap__gallery { position: sticky; top: 0; }
+  .kap__info { padding: 32px 32px 80px; }
+}
+
+/* Title */
+.kap__title {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: clamp(1.25rem, 5vw, 1.75rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0em;
+  line-height: 1.1;
+  color: #111111;
+  margin: 0 0 14px;
+}
+
+/* Price */
+.kap__price-block {
+  margin-bottom: 20px;
+}
+
+.kap__price-row {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.kap__price {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111111;
+}
+
+.kap__sale { color: #CC0000; }
+.kap__was  { color: #888888; font-weight: 400; font-size: 0.9rem; }
+
+.kap__tax-badge {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 0.58rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #888888;
+}
+
+.kap__vip-line {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 0.78rem;
+  color: #888888;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.kap__vip-a {
+  color: #111111;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ── Option buttons ───────────────────────────── */
+.kap__form { margin: 0; }
+
+.kap__option-group {
+  margin-bottom: 16px;
+}
+
+.kap__option-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.kap__opt {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 52px;
+  padding: 10px 16px;
+  border: 1.5px solid #CCCCCC;
+  background: #FFFFFF;
+  color: #111111;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+  user-select: none;
+}
+
+.kap__opt-radio { display: none; }
+
+.kap__opt.is-active {
+  background: #111111;
+  color: #FFFFFF;
+  border-color: #111111;
+}
+
+.kap__opt.is-out {
+  opacity: 0.4;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+/* ── ATC + Star row ───────────────────────────── */
+.kap__buy-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.kap__atc {
+  flex: 1 1 auto;
+  display: block;
+  background: #111111;
+  color: #FFFFFF;
+  border: 2px solid #111111;
+  border-radius: 0;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 18px 16px;
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.15s, color 0.15s;
+  -webkit-appearance: none;
+}
+
+.kap__atc:hover:not(:disabled) {
+  background: #FFFFFF;
+  color: #111111;
+}
+
+.kap__atc:disabled {
+  background: #AAAAAA;
+  border-color: #AAAAAA;
+  cursor: not-allowed;
+}
+
+.kap__star {
+  flex: 0 0 58px;
+  width: 58px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #FFFFFF;
+  border: 2px solid #111111;
+  border-radius: 0;
+  cursor: pointer;
+  color: #111111;
+  padding: 0;
+  transition: background 0.15s, color 0.15s;
+  -webkit-appearance: none;
+}
+
+.kap__star:hover,
+.kap__star.is-saved {
+  background: #111111;
+  color: #FFFFFF;
+}
+
+/* Model info */
+.kap__model {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 0.75rem;
+  color: #888888;
+  margin: 0 0 8px;
+  line-height: 1.5;
+}
+
+/* ── Accordions ───────────────────────────────── */
+.kap__accordions {
+  margin-top: 8px;
+}
+
+.kap__acc {
+  border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+.kap__acc:last-child {
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.kap__acc-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 17px 0;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.kap__acc-head::-webkit-details-marker { display: none; }
+.kap__acc-head::marker { display: none; }
+
+.kap__acc-ico {
+  flex-shrink: 0;
+  color: #111111;
+}
+
+.kap__acc-lbl {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #111111;
+  flex: 1;
+}
+
+.kap__acc-tog {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: 300;
+  color: #111111;
+  line-height: 1;
+  min-width: 16px;
+  text-align: right;
+}
+
+.kap__acc-body {
+  padding: 0 0 20px;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 0.8rem;
+  line-height: 1.7;
+  color: #888888;
+}
+
+.kap__acc-body p { margin: 0 0 4px; }
+.kap__acc-body p:last-child { margin-bottom: 0; }
+
+.kap__acc-body.rte p,
+.kap__acc-body.rte li {
+  font-size: 0.8rem;
+  line-height: 1.7;
+  color: #888888;
+}
+
+/* Size table */
+.kap__size-img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.kap__tbl-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.kap__tbl {
+  width: 100%;
+  min-width: 320px;
+  border-collapse: collapse;
+  font-size: 0.72rem;
+}
+
+.kap__tbl th,
+.kap__tbl td {
+  border: 1px solid rgba(0,0,0,0.1);
+  padding: 7px 10px;
+  text-align: center;
+}
+
+.kap__tbl thead th {
+  background: #111111;
+  color: #FFFFFF;
+  font-weight: 600;
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.kap__tbl tbody td:first-child {
+  text-align: left;
+  font-weight: 500;
+  background: #F8F8F8;
+  white-space: nowrap;
+}
+
+.kap__tbl-note {
+  font-size: 0.65rem;
+  color: #AAAAAA;
+  margin-top: 8px;
+}
+
+/* ── RECOMMENDED ──────────────────────────────── */
+.kap__recs {
+  background: #FFFFFF;
+  padding: 32px 16px 48px;
+  border-top: 1px solid rgba(0,0,0,0.08);
+}
+
+@media screen and (min-width: 750px) {
+  .kap__recs { padding: 40px 32px 64px; }
+}
+
+.kap__recs-hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.kap__recs-title {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: #111111;
+  margin: 0;
+}
+
+.kap__recs-more {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #111111;
+  text-decoration: none;
+}
+
+.kap__recs-more:hover { text-decoration: underline; text-underline-offset: 2px; }
+
+.kap__recs-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+@media screen and (min-width: 750px) {
+  .kap__recs-row { grid-template-columns: repeat(4, 1fr); gap: 16px; }
+}
+
+/* Placeholder skeleton */
+.kap__rec--ph {
+  background: #EFEFEF;
+  aspect-ratio: 1;
+  animation: kaPulse 1.2s ease-in-out infinite;
+}
+
+@keyframes kaPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Rec card */
+.kap__rec {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.kap__rec-img-box {
+  position: relative;
+  background: #EFEFEF;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.kap__rec-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  transition: opacity 0.2s;
+}
+
+.kap__rec:hover .kap__rec-img { opacity: 0.85; }
+
+.kap__rec-badge {
+  position: absolute;
+  top: 7px;
+  left: 7px;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 0.55rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  z-index: 1;
+}
+
+.kap__rec-badge--new { color: #111111; }
+.kap__rec-badge--sale { color: #CC0000; }
+
+.kap__rec-name {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 0.73rem;
+  font-weight: 400;
+  color: #111111;
+  margin: 0 0 2px;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kap__rec-price {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 0.73rem;
+  font-weight: 400;
+  color: #888888;
+  margin: 0;
+}
+
+/* ── Sticky ATC bar ───────────────────────────── */
+.kap__sticky {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  gap: 0;
+  background: #111111;
+  transform: translateY(100%);
+  transition: transform 0.25s ease;
+}
+
+.kap__sticky.is-visible {
+  transform: translateY(0);
+}
+
+.kap__sticky-atc {
+  flex: 1 1 auto;
+  background: #111111;
+  color: #FFFFFF;
+  border: none;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 18px 16px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.kap__sticky-atc:hover:not(:disabled) { background: #333333; }
+.kap__sticky-atc:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.kap__sticky-star {
+  flex: 0 0 58px;
+  width: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #111111;
+  border: none;
+  border-left: 1px solid rgba(255,255,255,0.15);
+  color: #FFFFFF;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.15s;
+}
+
+.kap__sticky-star:hover { background: #333333; }
+.kap__sticky-star.is-saved svg { fill: currentColor; }
+
+/* ── Wishlist Modal ───────────────────────────── */
+.kap__modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.kap__modal[hidden] { display: none; }
+
+.kap__modal-bg {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  cursor: pointer;
+}
+
+.kap__modal-box {
+  position: relative;
+  background: #FFFFFF;
+  padding: 44px 32px 36px;
+  max-width: 380px;
+  width: calc(100% - 32px);
+  text-align: center;
+  z-index: 1;
+}
+
+.kap__modal-x {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #888888;
+  padding: 4px;
+  line-height: 1;
+  display: flex;
+}
+
+.kap__modal-icon {
+  margin-bottom: 16px;
+  color: #111111;
+}
+
+.kap__modal-h {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #111111;
+  margin: 0 0 10px;
+}
+
+.kap__modal-p {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 0.8rem;
+  color: #888888;
+  line-height: 1.55;
+  margin: 0 0 24px;
+}
+
+.kap__modal-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.kap__modal-btn {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  border: 2px solid transparent;
+}
+
+.kap__modal-btn--dark {
+  background: #111111;
+  color: #FFFFFF;
+  border-color: #111111;
+}
+
+.kap__modal-btn--dark:hover {
+  background: #FFFFFF;
+  color: #111111;
+  text-decoration: none;
+}
+
+.kap__modal-btn--light {
+  background: #FFFFFF;
+  color: #111111;
+  border-color: rgba(0,0,0,0.2);
+}
+
+.kap__modal-btn--light:hover {
+  border-color: #111111;
+  text-decoration: none;
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Product",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "size_chart_image",
+      "label": "Size chart image",
+      "info": "Upload a size chart image. If left blank, a default table is shown."
+    },
+    {
+      "type": "text",
+      "id": "model_info",
+      "label": "Model info text",
+      "placeholder": "Male: (6'1\", 185 lbs): M"
+    },
+    {
+      "type": "richtext",
+      "id": "shipping_info",
+      "label": "Shipping details",
+      "info": "Leave blank to use default shipping text."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product"
+    }
+  ]
+}
+{% endschema %}
