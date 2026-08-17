@@ -728,30 +728,31 @@
 .kap__atc {
   flex: 1 1 auto;
   display: block;
-  background: #111111;
-  color: #FFFFFF;
-  border: 2px solid #111111;
-  border-radius: 0;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  padding: 18px 16px;
+  background: #111111 !important;
+  color: #FFFFFF !important;
+  border: 2px solid #111111 !important;
+  border-radius: 0 !important;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.18em !important;
+  text-transform: uppercase !important;
+  padding: 18px 16px !important;
   cursor: pointer;
   text-align: center;
   transition: background 0.15s, color 0.15s;
   -webkit-appearance: none;
+  width: 100%;
 }
 
 .kap__atc:hover:not(:disabled) {
-  background: #FFFFFF;
-  color: #111111;
+  background: #FFFFFF !important;
+  color: #111111 !important;
 }
 
 .kap__atc:disabled {
-  background: #AAAAAA;
-  border-color: #AAAAAA;
+  background: #AAAAAA !important;
+  border-color: #AAAAAA !important;
   cursor: not-allowed;
 }
 
@@ -762,11 +763,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #FFFFFF;
-  border: 2px solid #111111;
-  border-radius: 0;
+  background: #FFFFFF !important;
+  border: 2px solid #111111 !important;
+  border-radius: 0 !important;
   cursor: pointer;
-  color: #111111;
+  color: #111111 !important;
   padding: 0;
   transition: background 0.15s, color 0.15s;
   -webkit-appearance: none;
@@ -774,8 +775,8 @@
 
 .kap__star:hover,
 .kap__star.is-saved {
-  background: #111111;
-  color: #FFFFFF;
+  background: #111111 !important;
+  color: #FFFFFF !important;
 }
 
 /* Model info */
@@ -1049,20 +1050,22 @@
 
 .kap__sticky-atc {
   flex: 1 1 auto;
-  background: #111111;
-  color: #FFFFFF;
-  border: none;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  background: #111111 !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  border-radius: 0 !important;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.18em !important;
+  text-transform: uppercase !important;
   padding: 18px 16px;
   cursor: pointer;
   transition: background 0.15s;
+  -webkit-appearance: none;
 }
 
-.kap__sticky-atc:hover:not(:disabled) { background: #333333; }
+.kap__sticky-atc:hover:not(:disabled) { background: #333333 !important; }
 .kap__sticky-atc:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .kap__sticky-star {

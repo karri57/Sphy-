@@ -293,7 +293,15 @@ h1.product__title,
   border-color: var(--ka-ink) !important;
 }
 
-/* ATC button: full-width solid black */
+/* ka-product custom section — force button readability */
+.kap__atc,
+.kap__sticky-atc {
+  background: #111111 !important;
+  color: #FFFFFF !important;
+  border-color: #111111 !important;
+}
+
+/* ATC button: full-width solid black (Tinker default product page) */
 [data-template*="product"] .buy-buttons-block button[type="submit"]:not(.quick-add__button),
 [data-template*="product"] [class*="add-to-cart"]:not(.quick-add__button),
 [data-template*="product"] button[name="add"]:not(.quick-add__button) {
