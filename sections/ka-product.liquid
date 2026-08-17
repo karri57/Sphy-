@@ -86,13 +86,15 @@
     </div>
 
     <!-- Product form -->
-    {%- form 'product', product, id: 'kap-form-{{ section.id }}', class: 'kap__form' -%}
+    {%- assign kap_form_id = 'kap-form-' | append: section.id -%}
+    {%- form 'product', product, id: kap_form_id, class: 'kap__form' -%}
       <input type="hidden" name="quantity" value="1">
       <input type="hidden" name="id" id="kap-vid-{{ section.id }}" value="{{ cv.id }}">
 
       {%- unless product.has_only_default_variant -%}
         {%- for option in product.options_with_values -%}
           <div class="kap__option-group" data-option-pos="{{ option.position }}">
+            <p class="kap__option-name">{{ option.name }}</p>
             <div class="kap__option-btns" role="group" aria-label="{{ option.name }}">
               {%- for value in option.values -%}
                 {%- assign is_active = option.selected_value == value -%}
@@ -131,7 +133,7 @@
           id="kap-atc-{{ section.id }}"
           {%- unless cv.available %} disabled{%- endunless -%}
         >
-          {{- cv.available ? 'ADD TO CART' : 'SOLD OUT' -}}
+          {{- cv.available | iif: 'ADD TO CART', 'SOLD OUT' -}}
         </button>
         <button type="button" class="kap__star" id="kap-star-{{ section.id }}" aria-label="Save to favorites">
           <svg class="kap__star-svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
@@ -246,7 +248,7 @@
 <div class="kap__sticky" id="kap-sticky-{{ section.id }}">
   <button type="button" class="kap__sticky-atc" id="kap-sticky-atc-{{ section.id }}"
     {%- unless cv.available %} disabled{%- endunless -%}>
-    {{- cv.available ? 'ADD TO CART' : 'SOLD OUT' -}}
+    {{- cv.available | iif: 'ADD TO CART', 'SOLD OUT' -}}
   </button>
   <button type="button" class="kap__sticky-star" id="kap-sticky-star-{{ section.id }}" aria-label="Save to favorites">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
@@ -393,7 +395,7 @@
   }
 
   /* ─── Accordion toggle icons ─────────────── */
-  document.querySelectorAll('#kap-' + sid + ' .kap__acc, .kap__acc').forEach(function(acc) {
+  document.querySelectorAll('#kap-' + sid + ' .kap__acc').forEach(function(acc) {
     acc.addEventListener('toggle', function() {
       var tog = acc.querySelector('.kap__acc-tog');
       if (tog) tog.textContent = acc.open ? '—' : '+';
@@ -665,6 +667,16 @@
 
 .kap__option-group {
   margin-bottom: 16px;
+}
+
+.kap__option-name {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #111111;
+  margin: 0 0 8px;
 }
 
 .kap__option-btns {

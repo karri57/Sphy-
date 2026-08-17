@@ -20,7 +20,6 @@
     {%- for product in collection_obj.products limit: section.settings.max_products -%}
       {%- assign first_variant = product.selected_or_first_available_variant -%}
 
-      {%- comment -%}Badge logic{%- endcomment -%}
       {%- assign is_sale = false -%}
       {%- assign is_new = false -%}
       {%- if product.compare_at_price > product.price -%}
@@ -34,7 +33,6 @@
         {%- endif -%}
       {%- endif -%}
 
-      {%- comment -%}Find color option index{%- endcomment -%}
       {%- assign color_index = nil -%}
       {%- for opt in product.options -%}
         {%- assign opt_low = opt | downcase -%}
@@ -46,7 +44,7 @@
       <div class="ka-pgrid__item">
         <div class="ka-pgrid__card">
 
-          {%- comment -%}Top row: badge + star{%- endcomment -%}
+          <!-- Badge + star overlay -->
           <div class="ka-pgrid__card-top">
             <div class="ka-pgrid__badge-wrap">
               {%- if is_sale -%}
@@ -62,60 +60,49 @@
             </button>
           </div>
 
-          {%- comment -%}Product image{%- endcomment -%}
-          <a href="{{ product.url }}" class="ka-pgrid__img-link" tabindex="-1" aria-label="{{ product.title | escape }}">
-            <div class="ka-pgrid__img-box">
-              {%- if product.featured_image != blank -%}
-                {{
-                  product.featured_image
-                  | image_url: width: 800
-                  | image_tag:
-                    class: 'ka-pgrid__img',
-                    alt: product.featured_image.alt | default: product.title,
-                    loading: 'lazy',
-                    width: product.featured_image.width,
-                    height: product.featured_image.height,
-                    sizes: '(min-width: 750px) 25vw, 50vw',
-                    widths: '300, 450, 600, 800'
-                }}
+          <!-- Image track: swipeable via CSS scroll-snap -->
+          <a href="{{ product.url }}" class="ka-pgrid__img-link" aria-label="{{ product.title | escape }}">
+            <div class="ka-pgrid__img-track">
+              {%- if product.images != blank -%}
+                {%- for img in product.images limit: 4 -%}
+                  <div class="ka-pgrid__img-slide">
+                    {{
+                      img
+                      | image_url: width: 600
+                      | image_tag:
+                        class: 'ka-pgrid__img',
+                        alt: img.alt | default: product.title,
+                        loading: forloop.first | iif: 'eager', 'lazy',
+                        sizes: '(min-width: 750px) 25vw, 50vw',
+                        widths: '300, 450, 600'
+                    }}
+                  </div>
+                {%- endfor -%}
               {%- else -%}
-                {{ 'product-apparel-1' | placeholder_svg_tag: 'ka-pgrid__img ka-pgrid__placeholder' }}
+                <div class="ka-pgrid__img-slide">
+                  {{ 'product-apparel-1' | placeholder_svg_tag: 'ka-pgrid__img ka-pgrid__placeholder' }}
+                </div>
               {%- endif -%}
             </div>
           </a>
 
-          {%- comment -%}Bottom card row: + ATC + image dots{%- endcomment -%}
-          <div class="ka-pgrid__card-foot">
-            {%- if product.variants.size == 1 -%}
-              {%- form 'product', product, class: 'ka-pgrid__atc-form' -%}
-                <input type="hidden" name="id" value="{{ first_variant.id }}">
-                <input type="hidden" name="quantity" value="1">
-                <button
-                  type="submit"
-                  class="ka-pgrid__plus"
-                  {%- unless first_variant.available %} disabled{%- endunless -%}
-                  aria-label="Add {{ product.title | escape }} to cart"
-                >+</button>
-              {%- endform -%}
-            {%- else -%}
-              <a href="{{ product.url }}" class="ka-pgrid__plus" aria-label="Choose options for {{ product.title | escape }}">+</a>
-            {%- endif -%}
-
-            {%- if product.images.size > 1 -%}
-              <div class="ka-pgrid__dots" aria-hidden="true">
-                {%- for i in (1..product.images.size) limit: 4 -%}
-                  <span class="ka-pgrid__dot{% if forloop.first %} ka-pgrid__dot--active{% endif %}"></span>
-                {%- endfor -%}
-              </div>
-            {%- endif -%}
-          </div>
+          <!-- Image dots (static indicator) -->
+          {%- if product.images.size > 1 -%}
+            <div class="ka-pgrid__cdots" aria-hidden="true">
+              {%- for i in (1..product.images.size) limit: 4 -%}
+                <span class="ka-pgrid__cdot{% if forloop.first %} is-act{% endif %}"></span>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
 
         </div><!-- /.ka-pgrid__card -->
 
-        {%- comment -%}Info below card{%- endcomment -%}
+        <!-- Info below card -->
         <div class="ka-pgrid__info">
-          <a href="{{ product.url }}" class="ka-pgrid__text-link">
-            <p class="ka-pgrid__name">{{ product.title | truncate: 28 }}</p>
+          <a href="{{ product.url }}" class="ka-pgrid__name-link">
+            <p class="ka-pgrid__name">{{ product.title | truncate: 30 }}</p>
+          </a>
+          <div class="ka-pgrid__btm-row">
             <p class="ka-pgrid__price">
               {%- if is_sale -%}
                 <span class="ka-pgrid__price-sale">{{ product.price | money }}</span>
@@ -124,7 +111,21 @@
                 {{ product.price | money }}
               {%- endif -%}
             </p>
-          </a>
+            {%- if product.variants.size == 1 -%}
+              {%- form 'product', product, class: 'ka-pgrid__atc-form' -%}
+                <input type="hidden" name="id" value="{{ first_variant.id }}">
+                <input type="hidden" name="quantity" value="1">
+                <button
+                  type="submit"
+                  class="ka-pgrid__atc-btn"
+                  aria-label="Add {{ product.title | escape }} to cart"
+                  {%- unless first_variant.available %} disabled{%- endunless -%}
+                >ADD TO CART</button>
+              {%- endform -%}
+            {%- else -%}
+              <a href="{{ product.url }}" class="ka-pgrid__atc-btn">ADD TO CART</a>
+            {%- endif -%}
+          </div>
 
           {%- if color_index != nil -%}
             <div class="ka-pgrid__swatches" aria-label="Available colors">
@@ -150,7 +151,6 @@
 </div>
 
 {% stylesheet %}
-  /* ── Section wrapper ──────────────────────────────────── */
   .ka-pgrid {
     background: #FFFFFF;
     padding: 32px 16px 72px;
@@ -165,46 +165,41 @@
 
   .ka-pgrid__title {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     font-weight: 700;
     letter-spacing: -0.01em;
     color: #111111;
     margin: 0;
-    text-transform: none;
   }
 
   .ka-pgrid__view-all {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 0.75rem;
-    font-weight: 400;
+    font-size: 0.72rem;
     color: #111111;
     text-decoration: underline;
     text-underline-offset: 2px;
-    letter-spacing: 0.01em;
   }
 
-  /* ── Grid ─────────────────────────────────────────────── */
+  /* ── Grid ─────────────────────────────────────── */
   .ka-pgrid__inner {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     column-gap: 10px;
-    row-gap: 24px;
+    row-gap: 28px;
     max-width: 1280px;
     margin: 0 auto;
   }
 
   @media screen and (min-width: 750px) {
-    .ka-pgrid {
-      padding: 40px 32px 96px;
-    }
+    .ka-pgrid { padding: 40px 32px 96px; }
     .ka-pgrid__inner {
       grid-template-columns: repeat(4, 1fr);
       column-gap: 16px;
-      row-gap: 32px;
+      row-gap: 36px;
     }
   }
 
-  /* ── Card ─────────────────────────────────────────────── */
+  /* ── Card ─────────────────────────────────────── */
   .ka-pgrid__item {
     display: flex;
     flex-direction: column;
@@ -217,7 +212,7 @@
     flex-direction: column;
   }
 
-  /* ── Card top row (badge + star) ──────────────────────── */
+  /* ── Badge + star overlay ─────────────────────── */
   .ka-pgrid__card-top {
     display: flex;
     align-items: flex-start;
@@ -228,11 +223,10 @@
     left: 0;
     right: 0;
     z-index: 2;
+    pointer-events: none;
   }
 
-  .ka-pgrid__badge-wrap {
-    min-height: 18px;
-  }
+  .ka-pgrid__badge-wrap { min-height: 18px; }
 
   .ka-pgrid__badge {
     display: inline-block;
@@ -244,13 +238,8 @@
     line-height: 1;
   }
 
-  .ka-pgrid__badge--new {
-    color: #111111;
-  }
-
-  .ka-pgrid__badge--sale {
-    color: #CC0000;
-  }
+  .ka-pgrid__badge--new { color: #111111; }
+  .ka-pgrid__badge--sale { color: #CC0000; }
 
   .ka-pgrid__star {
     background: none;
@@ -260,121 +249,78 @@
     color: #888888;
     display: flex;
     align-items: center;
-    justify-content: center;
+    pointer-events: auto;
     flex-shrink: 0;
   }
 
-  .ka-pgrid__star:hover {
-    color: #111111;
-  }
+  .ka-pgrid__star:hover { color: #111111; }
 
-  /* ── Image ─────────────────────────────────────────────── */
+  /* ── Image track (swipeable) ───────────────────── */
   .ka-pgrid__img-link {
     display: block;
     text-decoration: none;
     padding-top: 28px;
   }
 
-  .ka-pgrid__img-box {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    overflow: hidden;
+  .ka-pgrid__img-track {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .ka-pgrid__img-track::-webkit-scrollbar { display: none; }
+
+  .ka-pgrid__img-slide {
+    flex: 0 0 100%;
+    width: 100%;
+    scroll-snap-align: start;
   }
 
   .ka-pgrid__img,
   .ka-pgrid__placeholder {
+    display: block;
     width: 100%;
-    height: 100%;
+    aspect-ratio: 1 / 1;
     object-fit: contain;
     object-position: center;
-    display: block;
     transition: opacity 0.2s ease;
   }
 
-  .ka-pgrid__img-link:hover .ka-pgrid__img {
-    opacity: 0.88;
-  }
+  .ka-pgrid__img-link:hover .ka-pgrid__img { opacity: 0.85; }
 
-  /* ── Card foot (+ button + dots) ─────────────────────── */
-  .ka-pgrid__card-foot {
+  /* ── Card image dots ──────────────────────────── */
+  .ka-pgrid__cdots {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 10px 10px;
-  }
-
-  .ka-pgrid__atc-form {
-    margin: 0;
-    padding: 0;
-    line-height: 1;
-  }
-
-  .ka-pgrid__plus {
-    display: flex;
-    align-items: center;
     justify-content: center;
-    width: 26px;
-    height: 26px;
-    background: none;
-    border: 1.5px solid #555555;
-    border-radius: 50%;
-    color: #111111;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 1.1rem;
-    font-weight: 300;
-    line-height: 1;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
-    padding: 0 0 1px;
-    -webkit-appearance: none;
-    box-sizing: border-box;
-  }
-
-  .ka-pgrid__plus:hover {
-    background: #111111;
-    border-color: #111111;
-    color: #FFFFFF;
-    text-decoration: none;
-  }
-
-  .ka-pgrid__plus:disabled {
-    opacity: 0.35;
-    cursor: not-allowed;
-  }
-
-  .ka-pgrid__dots {
-    display: flex;
     gap: 4px;
-    align-items: center;
+    padding: 8px 0 10px;
+    pointer-events: none;
   }
 
-  .ka-pgrid__dot {
+  .ka-pgrid__cdot {
     display: inline-block;
-    width: 6px;
-    height: 6px;
+    width: 5px;
+    height: 5px;
     border-radius: 50%;
-    background: #CCCCCC;
+    background: rgba(0,0,0,0.18);
     flex-shrink: 0;
   }
 
-  .ka-pgrid__dot--active {
-    background: #111111;
-  }
+  .ka-pgrid__cdot.is-act { background: #111111; }
 
-  /* ── Info below card ──────────────────────────────────── */
+  /* ── Info below card ──────────────────────────── */
   .ka-pgrid__info {
     margin-top: 8px;
     padding: 0 2px;
   }
 
-  .ka-pgrid__text-link {
+  .ka-pgrid__name-link {
     display: block;
     text-decoration: none;
     color: inherit;
+    margin-bottom: 5px;
   }
 
   .ka-pgrid__name {
@@ -382,9 +328,17 @@
     font-size: 0.75rem;
     font-weight: 400;
     color: #111111;
-    margin: 0 0 2px;
+    margin: 0;
     line-height: 1.35;
-    letter-spacing: 0;
+  }
+
+  /* ── Price row + ATC ──────────────────────────── */
+  .ka-pgrid__btm-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    margin-bottom: 6px;
   }
 
   .ka-pgrid__price {
@@ -392,21 +346,41 @@
     font-size: 0.75rem;
     font-weight: 400;
     color: #111111;
-    margin: 0 0 6px;
-    letter-spacing: 0;
+    margin: 0;
+    flex-shrink: 0;
   }
 
-  .ka-pgrid__price-sale {
-    color: #CC0000;
-    margin-right: 4px;
+  .ka-pgrid__price-sale { color: #CC0000; margin-right: 3px; }
+  .ka-pgrid__price-compare { color: #999; text-decoration: line-through; }
+
+  .ka-pgrid__atc-form { margin: 0; padding: 0; line-height: 1; }
+
+  .ka-pgrid__atc-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #111111;
+    color: #FFFFFF;
+    border: none;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 0.5rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 7px 9px;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+    -webkit-appearance: none;
+    transition: background 0.15s;
+    line-height: 1;
   }
 
-  .ka-pgrid__price-compare {
-    color: #888888;
-    text-decoration: line-through;
-  }
+  .ka-pgrid__atc-btn:hover:not([disabled]) { background: #333333; color: #FFFFFF; text-decoration: none; }
+  .ka-pgrid__atc-btn[disabled] { opacity: 0.38; cursor: not-allowed; }
 
-  /* ── Color swatches ───────────────────────────────────── */
+  /* ── Color swatches ───────────────────────────── */
   .ka-pgrid__swatches {
     display: flex;
     gap: 4px;
@@ -416,15 +390,14 @@
 
   .ka-pgrid__swatch {
     display: inline-block;
-    width: 14px;
-    height: 14px;
+    width: 13px;
+    height: 13px;
     border-radius: 50%;
-    border: 1.5px solid rgba(0, 0, 0, 0.15);
+    border: 1.5px solid rgba(0,0,0,0.15);
     flex-shrink: 0;
-    cursor: pointer;
   }
 
-  /* ── Empty state ──────────────────────────────────────── */
+  /* ── Empty state ──────────────────────────────── */
   .ka-pgrid__empty {
     grid-column: 1 / -1;
     text-align: center;
