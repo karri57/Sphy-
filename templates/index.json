@@ -9,15 +9,26 @@
  */
 {
   "sections": {
+    "ka_hero": {
+      "type": "ka-hero",
+      "name": "Hero Banner",
+      "settings": {
+        "heading": "NEW COLLECTION",
+        "button_label": "SHOP",
+        "button_link": "/collections/all",
+        "overlay_opacity": 30
+      }
+    },
     "ka_grid": {
       "type": "ka-product-grid",
       "name": "Product Grid",
       "settings": {
+        "heading": "New Arrivals",
+        "view_all_link": "/collections/all",
         "collection": "frontpage",
-        "max_products": 24,
-        "color_scheme": "scheme-1"
+        "max_products": 8
       }
     }
   },
-  "order": ["ka_grid"]
+  "order": ["ka_hero", "ka_grid"]
 }

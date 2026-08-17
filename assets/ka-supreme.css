@@ -1,18 +1,19 @@
 /* ============================================================
-   KarrionAmir — Editorial Interface
-   Warm. Still. Faith-forward.
+   KarrionAmir — Streetwear Editorial
+   Clean. Bold. Direct.
    ============================================================ */
 
 /* ── Tokens ─────────────────────────────────────────────── */
 :root {
-  --ka-cream:   #F4F2EE;
+  --ka-cream:   #FFFFFF;
   --ka-white:   #FFFFFF;
-  --ka-ink:     #141414;
-  --ka-muted:   #8A8A86;
-  --ka-red:     #B82222;
+  --ka-ink:     #111111;
+  --ka-muted:   #888888;
+  --ka-card:    #EFEFEF;
+  --ka-red:     #CC0000;
   --ka-green:   #3B9B5E;
   --ka-font:    'Helvetica Neue', Helvetica, Arial, sans-serif;
-  --ka-display: Georgia, 'Times New Roman', serif;
+  --ka-display: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   --ka-radius:  0;
   --ka-border:  1px solid rgba(0, 0, 0, 0.1);
   --ka-speed:   0.2s;
@@ -32,10 +33,10 @@ body {
 .color-scheme-1,
 .color-scheme-2,
 .color-scheme-3 {
-  --color-background:     244, 242, 238;
-  --color-background-rgb: 244, 242, 238;
-  --color-foreground:     rgb(20, 20, 20);
-  --color-foreground-rgb: 20, 20, 20;
+  --color-background:     255, 255, 255;
+  --color-background-rgb: 255, 255, 255;
+  --color-foreground:     rgb(17, 17, 17);
+  --color-foreground-rgb: 17, 17, 17;
 }
 
 .color-scheme-5,
@@ -46,7 +47,7 @@ body {
   --color-foreground-rgb: 255, 255, 255;
 }
 
-/* Sections → cream */
+/* Sections → white */
 .shopify-section,
 .section-background,
 [class*="product-list"] {
@@ -67,11 +68,17 @@ a { color: var(--ka-ink); text-decoration: none; }
 a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
 /* ── Header ─────────────────────────────────────────────── */
-header-component,
-header-component[transparent] {
+header-component {
   background: var(--ka-cream) !important;
   border-bottom: var(--ka-border) !important;
   transition: background var(--ka-speed) ease, border-color var(--ka-speed) ease;
+}
+
+/* Allow transparent mode over hero */
+header-component[transparent],
+header-component.is-transparent {
+  background: transparent !important;
+  border-bottom: none !important;
 }
 
 /* Nav links */

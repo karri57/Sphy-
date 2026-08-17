@@ -3,61 +3,145 @@
   if collection_obj == blank
     assign collection_obj = collections.frontpage
   endif
+  assign thirty_days_ago = 'now' | date: '%s' | minus: 2592000
 -%}
 
 <div class="ka-pgrid">
+  {%- if section.settings.heading != blank -%}
+    <div class="ka-pgrid__header">
+      <h2 class="ka-pgrid__title">{{ section.settings.heading }}</h2>
+      {%- if section.settings.view_all_link != blank -%}
+        <a href="{{ section.settings.view_all_link }}" class="ka-pgrid__view-all">View All</a>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
   <div class="ka-pgrid__inner">
     {%- for product in collection_obj.products limit: section.settings.max_products -%}
       {%- assign first_variant = product.selected_or_first_available_variant -%}
 
-      <div class="ka-pgrid__item">
-        <a href="{{ product.url }}" class="ka-pgrid__img-wrap" tabindex="-1" aria-label="{{ product.title | escape }}">
-          <div class="ka-pgrid__img-box">
-            {%- if product.featured_image != blank -%}
-              {{
-                product.featured_image
-                | image_url: width: 800
-                | image_tag:
-                  class: 'ka-pgrid__img',
-                  alt: product.featured_image.alt | default: product.title,
-                  loading: 'lazy',
-                  width: product.featured_image.width,
-                  height: product.featured_image.height,
-                  sizes: '(min-width: 750px) 25vw, 50vw',
-                  widths: '300, 450, 600, 800'
-              }}
-            {%- else -%}
-              {{ 'product-apparel-1' | placeholder_svg_tag: 'ka-pgrid__img ka-pgrid__placeholder' }}
-            {%- endif -%}
-          </div>
-        </a>
+      {%- comment -%}Badge logic{%- endcomment -%}
+      {%- assign is_sale = false -%}
+      {%- assign is_new = false -%}
+      {%- if product.compare_at_price > product.price -%}
+        {%- assign is_sale = true -%}
+      {%- elsif product.tags contains 'new' or product.tags contains 'New' or product.tags contains 'NEW' -%}
+        {%- assign is_new = true -%}
+      {%- else -%}
+        {%- assign created_ts = product.created_at | date: '%s' | plus: 0 -%}
+        {%- if created_ts > thirty_days_ago -%}
+          {%- assign is_new = true -%}
+        {%- endif -%}
+      {%- endif -%}
 
-        <div class="ka-pgrid__info">
-          <a href="{{ product.url }}" class="ka-pgrid__text-link">
-            <p class="ka-pgrid__name">{{ product.title }}</p>
-            {%- unless product.variants.first.title == 'Default Title' -%}
-              <p class="ka-pgrid__sub">{{ product.variants.first.title }}</p>
-            {%- endunless -%}
-            <p class="ka-pgrid__price">{{ product.price | money }}</p>
+      {%- comment -%}Find color option index{%- endcomment -%}
+      {%- assign color_index = nil -%}
+      {%- for opt in product.options -%}
+        {%- assign opt_low = opt | downcase -%}
+        {%- if opt_low == 'color' or opt_low == 'colour' -%}
+          {%- assign color_index = forloop.index0 -%}
+        {%- endif -%}
+      {%- endfor -%}
+
+      <div class="ka-pgrid__item">
+        <div class="ka-pgrid__card">
+
+          {%- comment -%}Top row: badge + star{%- endcomment -%}
+          <div class="ka-pgrid__card-top">
+            <div class="ka-pgrid__badge-wrap">
+              {%- if is_sale -%}
+                <span class="ka-pgrid__badge ka-pgrid__badge--sale">Sale</span>
+              {%- elsif is_new -%}
+                <span class="ka-pgrid__badge ka-pgrid__badge--new">New In</span>
+              {%- endif -%}
+            </div>
+            <button class="ka-pgrid__star" aria-label="Save {{ product.title | escape }}" type="button">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+            </button>
+          </div>
+
+          {%- comment -%}Product image{%- endcomment -%}
+          <a href="{{ product.url }}" class="ka-pgrid__img-link" tabindex="-1" aria-label="{{ product.title | escape }}">
+            <div class="ka-pgrid__img-box">
+              {%- if product.featured_image != blank -%}
+                {{
+                  product.featured_image
+                  | image_url: width: 800
+                  | image_tag:
+                    class: 'ka-pgrid__img',
+                    alt: product.featured_image.alt | default: product.title,
+                    loading: 'lazy',
+                    width: product.featured_image.width,
+                    height: product.featured_image.height,
+                    sizes: '(min-width: 750px) 25vw, 50vw',
+                    widths: '300, 450, 600, 800'
+                }}
+              {%- else -%}
+                {{ 'product-apparel-1' | placeholder_svg_tag: 'ka-pgrid__img ka-pgrid__placeholder' }}
+              {%- endif -%}
+            </div>
           </a>
 
-          {%- if product.variants.size == 1 -%}
-            {%- form 'product', product, class: 'ka-pgrid__form' -%}
-              <input type="hidden" name="id" value="{{ first_variant.id }}">
-              <input type="hidden" name="quantity" value="1">
-              <button
-                type="submit"
-                class="ka-pgrid__atc"
-                {%- unless first_variant.available %} disabled{%- endunless -%}
-              >
-                {%- if first_variant.available -%}Add to Cart{%- else -%}Sold Out{%- endif -%}
-              </button>
-            {%- endform -%}
-          {%- else -%}
-            <a href="{{ product.url }}" class="ka-pgrid__atc">Choose Options</a>
+          {%- comment -%}Bottom card row: + ATC + image dots{%- endcomment -%}
+          <div class="ka-pgrid__card-foot">
+            {%- if product.variants.size == 1 -%}
+              {%- form 'product', product, class: 'ka-pgrid__atc-form' -%}
+                <input type="hidden" name="id" value="{{ first_variant.id }}">
+                <input type="hidden" name="quantity" value="1">
+                <button
+                  type="submit"
+                  class="ka-pgrid__plus"
+                  {%- unless first_variant.available %} disabled{%- endunless -%}
+                  aria-label="Add {{ product.title | escape }} to cart"
+                >+</button>
+              {%- endform -%}
+            {%- else -%}
+              <a href="{{ product.url }}" class="ka-pgrid__plus" aria-label="Choose options for {{ product.title | escape }}">+</a>
+            {%- endif -%}
+
+            {%- if product.images.size > 1 -%}
+              <div class="ka-pgrid__dots" aria-hidden="true">
+                {%- for i in (1..product.images.size) limit: 4 -%}
+                  <span class="ka-pgrid__dot{% if forloop.first %} ka-pgrid__dot--active{% endif %}"></span>
+                {%- endfor -%}
+              </div>
+            {%- endif -%}
+          </div>
+
+        </div><!-- /.ka-pgrid__card -->
+
+        {%- comment -%}Info below card{%- endcomment -%}
+        <div class="ka-pgrid__info">
+          <a href="{{ product.url }}" class="ka-pgrid__text-link">
+            <p class="ka-pgrid__name">{{ product.title | truncate: 28 }}</p>
+            <p class="ka-pgrid__price">
+              {%- if is_sale -%}
+                <span class="ka-pgrid__price-sale">{{ product.price | money }}</span>
+                <span class="ka-pgrid__price-compare">{{ product.compare_at_price | money }}</span>
+              {%- else -%}
+                {{ product.price | money }}
+              {%- endif -%}
+            </p>
+          </a>
+
+          {%- if color_index != nil -%}
+            <div class="ka-pgrid__swatches" aria-label="Available colors">
+              {%- assign seen = '' -%}
+              {%- for variant in product.variants -%}
+                {%- assign c = variant.options[color_index] -%}
+                {%- unless seen contains c -%}
+                  {%- assign seen = seen | append: c | append: '|' -%}
+                  {%- assign c_css = c | downcase | replace: ' ', '' -%}
+                  <span class="ka-pgrid__swatch" title="{{ c }}" style="background:{{ c_css }};"></span>
+                {%- endunless -%}
+              {%- endfor -%}
+            </div>
           {%- endif -%}
+
         </div>
-      </div>
+      </div><!-- /.ka-pgrid__item -->
 
     {%- else -%}
       <p class="ka-pgrid__empty">No products found.</p>
@@ -66,48 +150,138 @@
 </div>
 
 {% stylesheet %}
+  /* ── Section wrapper ──────────────────────────────────── */
   .ka-pgrid {
-    background: #F4F2EE;
-    padding: 24px 16px 72px;
+    background: #FFFFFF;
+    padding: 32px 16px 72px;
   }
 
+  .ka-pgrid__header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .ka-pgrid__title {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: #111111;
+    margin: 0;
+    text-transform: none;
+  }
+
+  .ka-pgrid__view-all {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: #111111;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    letter-spacing: 0.01em;
+  }
+
+  /* ── Grid ─────────────────────────────────────────────── */
   .ka-pgrid__inner {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    column-gap: 14px;
-    row-gap: 48px;
+    column-gap: 10px;
+    row-gap: 24px;
     max-width: 1280px;
     margin: 0 auto;
   }
 
   @media screen and (min-width: 750px) {
-    .ka-pgrid { padding: 48px 32px 96px; }
+    .ka-pgrid {
+      padding: 40px 32px 96px;
+    }
     .ka-pgrid__inner {
       grid-template-columns: repeat(4, 1fr);
-      column-gap: 20px;
-      row-gap: 60px;
+      column-gap: 16px;
+      row-gap: 32px;
     }
   }
 
+  /* ── Card ─────────────────────────────────────────────── */
   .ka-pgrid__item {
     display: flex;
     flex-direction: column;
   }
 
-  /* Image area ─────────────────────────────────── */
-  .ka-pgrid__img-wrap {
+  .ka-pgrid__card {
+    position: relative;
+    background: #EFEFEF;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Card top row (badge + star) ──────────────────────── */
+  .ka-pgrid__card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 8px 8px 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+  }
+
+  .ka-pgrid__badge-wrap {
+    min-height: 18px;
+  }
+
+  .ka-pgrid__badge {
+    display: inline-block;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  .ka-pgrid__badge--new {
+    color: #111111;
+  }
+
+  .ka-pgrid__badge--sale {
+    color: #CC0000;
+  }
+
+  .ka-pgrid__star {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: #888888;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .ka-pgrid__star:hover {
+    color: #111111;
+  }
+
+  /* ── Image ─────────────────────────────────────────────── */
+  .ka-pgrid__img-link {
     display: block;
     text-decoration: none;
+    padding-top: 28px;
   }
 
   .ka-pgrid__img-box {
     width: 100%;
     aspect-ratio: 1 / 1;
-    background: #FFFFFF;
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
   }
 
   .ka-pgrid__img,
@@ -120,98 +294,143 @@
     transition: opacity 0.2s ease;
   }
 
-  .ka-pgrid__img-wrap:hover .ka-pgrid__img { opacity: 0.88; }
+  .ka-pgrid__img-link:hover .ka-pgrid__img {
+    opacity: 0.88;
+  }
 
-  /* Info area ─────────────────────────────────── */
-  .ka-pgrid__info {
-    margin-top: 14px;
+  /* ── Card foot (+ button + dots) ─────────────────────── */
+  .ka-pgrid__card-foot {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    text-align: center;
+    justify-content: space-between;
+    padding: 8px 10px 10px;
+  }
+
+  .ka-pgrid__atc-form {
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+  }
+
+  .ka-pgrid__plus {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    background: none;
+    border: 1.5px solid #555555;
+    border-radius: 50%;
+    color: #111111;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 1.1rem;
+    font-weight: 300;
+    line-height: 1;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    padding: 0 0 1px;
+    -webkit-appearance: none;
+    box-sizing: border-box;
+  }
+
+  .ka-pgrid__plus:hover {
+    background: #111111;
+    border-color: #111111;
+    color: #FFFFFF;
+    text-decoration: none;
+  }
+
+  .ka-pgrid__plus:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  .ka-pgrid__dots {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .ka-pgrid__dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #CCCCCC;
+    flex-shrink: 0;
+  }
+
+  .ka-pgrid__dot--active {
+    background: #111111;
+  }
+
+  /* ── Info below card ──────────────────────────────────── */
+  .ka-pgrid__info {
+    margin-top: 8px;
+    padding: 0 2px;
   }
 
   .ka-pgrid__text-link {
     display: block;
-    width: 100%;
     text-decoration: none;
     color: inherit;
   }
 
   .ka-pgrid__name {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 0.6rem;
+    font-size: 0.75rem;
     font-weight: 400;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: #141414;
+    color: #111111;
     margin: 0 0 2px;
-    line-height: 1.5;
-  }
-
-  .ka-pgrid__sub {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 0.6rem;
-    font-weight: 400;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: #141414;
-    margin: 0 0 3px;
-    line-height: 1.5;
+    line-height: 1.35;
+    letter-spacing: 0;
   }
 
   .ka-pgrid__price {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 0.6rem;
+    font-size: 0.75rem;
     font-weight: 400;
-    letter-spacing: 0.06em;
-    color: #141414;
-    margin: 0 0 10px;
+    color: #111111;
+    margin: 0 0 6px;
+    letter-spacing: 0;
   }
 
-  /* Native Add to Cart button ─────────────────── */
-  .ka-pgrid__form { width: 100%; }
+  .ka-pgrid__price-sale {
+    color: #CC0000;
+    margin-right: 4px;
+  }
 
-  .ka-pgrid__atc {
-    display: block;
-    width: 100%;
-    background: #141414;
-    color: #FFFFFF;
-    border: 1px solid #141414;
-    border-radius: 0;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 0.58rem;
-    font-weight: 400;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    padding: 10px 8px;
+  .ka-pgrid__price-compare {
+    color: #888888;
+    text-decoration: line-through;
+  }
+
+  /* ── Color swatches ───────────────────────────────────── */
+  .ka-pgrid__swatches {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+
+  .ka-pgrid__swatch {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(0, 0, 0, 0.15);
+    flex-shrink: 0;
     cursor: pointer;
-    text-align: center;
-    text-decoration: none;
-    transition: background 0.18s ease, color 0.18s ease;
-    box-sizing: border-box;
-    -webkit-appearance: none;
   }
 
-  .ka-pgrid__atc:hover {
-    background: #FFFFFF;
-    color: #141414;
-    text-decoration: none;
-  }
-
-  .ka-pgrid__atc:disabled {
-    background: #CCCCCA;
-    border-color: #CCCCCA;
-    color: #FFFFFF;
-    cursor: not-allowed;
-  }
-
+  /* ── Empty state ──────────────────────────────────────── */
   .ka-pgrid__empty {
     grid-column: 1 / -1;
     text-align: center;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 0.82rem;
-    color: #8A8A86;
+    font-size: 0.85rem;
+    color: #888888;
     padding: 64px 0;
   }
 {% endstylesheet %}
@@ -220,6 +439,17 @@
 {
   "name": "Product Grid",
   "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section heading",
+      "default": "New Arrivals"
+    },
+    {
+      "type": "url",
+      "id": "view_all_link",
+      "label": "View All link"
+    },
     {
       "type": "collection",
       "id": "collection",
@@ -232,7 +462,7 @@
       "min": 2,
       "max": 48,
       "step": 2,
-      "default": 24
+      "default": 8
     }
   ],
   "presets": [

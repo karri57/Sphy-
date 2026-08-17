@@ -1,0 +1,190 @@
+{%- liquid
+  assign overlay_opacity = section.settings.overlay_opacity | times: 0.01
+-%}
+
+<section class="ka-hero">
+  {%- if section.settings.image != blank -%}
+    <div class="ka-hero__bg">
+      {{
+        section.settings.image
+        | image_url: width: 2000
+        | image_tag:
+          class: 'ka-hero__bg-img',
+          alt: section.settings.image.alt | default: shop.name,
+          loading: 'eager',
+          fetchpriority: 'high',
+          sizes: '100vw',
+          widths: '750, 1100, 1500, 2000'
+      }}
+    </div>
+  {%- else -%}
+    <div class="ka-hero__bg ka-hero__bg--placeholder">
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'ka-hero__placeholder-svg' }}
+    </div>
+  {%- endif -%}
+
+  <div class="ka-hero__overlay" style="background: rgba(0,0,0,{{ overlay_opacity }});"></div>
+
+  <div class="ka-hero__content">
+    {%- if section.settings.heading != blank -%}
+      <h1 class="ka-hero__heading">{{ section.settings.heading }}</h1>
+    {%- endif -%}
+    {%- if section.settings.subtext != blank -%}
+      <p class="ka-hero__sub">{{ section.settings.subtext }}</p>
+    {%- endif -%}
+    {%- if section.settings.button_label != blank -%}
+      <a href="{{ section.settings.button_link | default: '/collections/all' }}" class="ka-hero__btn">
+        {{ section.settings.button_label }}
+      </a>
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .ka-hero {
+    position: relative;
+    width: 100%;
+    height: 100svh;
+    min-height: 560px;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .ka-hero__bg {
+    position: absolute;
+    inset: 0;
+  }
+
+  .ka-hero__bg--placeholder {
+    background: #2a2a2a;
+  }
+
+  .ka-hero__bg-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+  }
+
+  .ka-hero__placeholder-svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ka-hero__overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .ka-hero__content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 0 24px 64px;
+    color: #FFFFFF;
+    width: 100%;
+    max-width: 700px;
+  }
+
+  .ka-hero__heading {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: clamp(2rem, 7vw, 4rem);
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: #FFFFFF;
+    margin: 0 0 20px;
+    line-height: 1.05;
+  }
+
+  .ka-hero__sub {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 0.9rem;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0 0 28px;
+    line-height: 1.5;
+  }
+
+  .ka-hero__btn {
+    display: inline-block;
+    border: 2px solid #FFFFFF;
+    color: #FFFFFF;
+    background: transparent;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 14px 48px;
+    text-decoration: none;
+    transition: background 0.2s ease, color 0.2s ease;
+    cursor: pointer;
+  }
+
+  .ka-hero__btn:hover {
+    background: #FFFFFF;
+    color: #141414;
+    text-decoration: none;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ka-hero__content { padding-bottom: 80px; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Hero Banner",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Dark overlay strength",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "default": 30,
+      "unit": "%"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "NEW COLLECTION"
+    },
+    {
+      "type": "text",
+      "id": "subtext",
+      "label": "Subtext"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "SHOP"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Banner"
+    }
+  ]
+}
+{% endschema %}
