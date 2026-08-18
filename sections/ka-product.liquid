@@ -81,7 +81,7 @@
       </div>
       <p class="kap__vip-line">
         Get it for <strong id="kap-vip">{{ vip_cents | money_without_trailing_zeros }}</strong> —
-        <a href="/account/register" class="kap__vip-a">join our newsletter today!</a>
+        <a href="{{ section.settings.vip_link | default: '/account/register' }}" class="kap__vip-a">{{ section.settings.vip_cta | default: 'join our VIP today!' }}</a>
       </p>
     </div>
 
@@ -142,9 +142,10 @@
       </div>
     {%- endform -%}
 
-    {%- if section.settings.model_info != blank -%}
-      <p class="kap__model"><strong>The models are wearing:</strong> {{ section.settings.model_info }}</p>
-    {%- endif -%}
+    <p class="kap__model">
+      <strong>{{ section.settings.model_label | default: 'The models are wearing:' }}</strong>
+      {% if section.settings.model_info != blank %}{{ section.settings.model_info }}{% else %}<em class="kap__model-hint">Add model info in theme editor → Product section settings</em>{% endif %}
+    </p>
 
     <!-- Accordions -->
     <div class="kap__accordions">
@@ -779,8 +780,18 @@
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 0.75rem;
   color: #888888;
-  margin: 0 0 8px;
+  margin: 0 0 16px;
   line-height: 1.5;
+}
+
+.kap__model strong {
+  color: #111111;
+  font-weight: 600;
+}
+
+.kap__model-hint {
+  color: #BBBBBB;
+  font-style: italic;
 }
 
 /* ── Accordions ───────────────────────────────── */
@@ -1197,22 +1208,59 @@
   "name": "Product",
   "settings": [
     {
-      "type": "image_picker",
-      "id": "size_chart_image",
-      "label": "Size chart image",
-      "info": "Upload a size chart image. If left blank, a default table is shown."
+      "type": "header",
+      "content": "VIP Price Line"
+    },
+    {
+      "type": "text",
+      "id": "vip_cta",
+      "label": "VIP call-to-action text",
+      "default": "join our VIP today!",
+      "info": "Text shown after the discounted price. e.g. 'join our VIP today!'"
+    },
+    {
+      "type": "url",
+      "id": "vip_link",
+      "label": "VIP link URL",
+      "info": "Where the VIP link goes. Default: /account/register"
+    },
+    {
+      "type": "header",
+      "content": "Model Info"
+    },
+    {
+      "type": "text",
+      "id": "model_label",
+      "label": "Model info label",
+      "default": "The models are wearing:",
+      "info": "The bold prefix text before the model details."
     },
     {
       "type": "text",
       "id": "model_info",
-      "label": "Model info text",
-      "placeholder": "Male: (6'1\", 185 lbs): M"
+      "label": "Model info details",
+      "placeholder": "Male: (6'2\", 185lbs): M",
+      "info": "e.g. Male: (6'2\", 185lbs): M — Female: (5'8\", 130lbs): S"
+    },
+    {
+      "type": "header",
+      "content": "Size Chart"
+    },
+    {
+      "type": "image_picker",
+      "id": "size_chart_image",
+      "label": "Size chart image",
+      "info": "Upload a size chart image. If left blank, a default measurement table is shown."
+    },
+    {
+      "type": "header",
+      "content": "Shipping Details"
     },
     {
       "type": "richtext",
       "id": "shipping_info",
       "label": "Shipping details",
-      "info": "Leave blank to use default shipping text."
+      "info": "Leave blank to use default shipping text (USA, Canada, International)."
     }
   ],
   "presets": [
