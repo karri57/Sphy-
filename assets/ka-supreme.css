@@ -54,15 +54,16 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
 /* ── Header ─────────────────────────────────────────────── */
 
-/* Purple brand header — Cold Culture style */
+/* Clean white header with black icons */
 header-component,
 header-component .header__row {
-  background: #a58db0 !important;
-  --color-background: #a58db0 !important;
-  --color-foreground: #ffffff !important;
+  background: #ffffff !important;
+  --color-background: #ffffff !important;
+  --color-foreground: #111111 !important;
+  border-bottom: 1px solid #e8e8e8 !important;
 }
 
-/* Make all header text, links, buttons white */
+/* All text, links, buttons — black */
 header-component a,
 header-component button,
 header-component span,
@@ -70,22 +71,22 @@ header-component .header__heading,
 header-component .header__heading a,
 header-component .header-actions__action,
 header-component .header-actions__label {
-  color: #ffffff !important;
+  color: #111111 !important;
 }
 
-/* SVG icons — Tinker uses stroke and fill both depending on icon */
+/* SVG icons — force black strokes/fills */
 header-component svg {
-  stroke: #ffffff !important;
+  stroke: #111111 !important;
   fill: none;
 }
 header-component svg[fill]:not([fill="none"]),
 header-component .header-actions__action svg path[fill]:not([fill="none"]) {
-  fill: #ffffff !important;
+  fill: #111111 !important;
 }
 
-/* Logo: invert dark logos to white automatically; upload white logo to skip */
-.header__logo img { filter: brightness(0) invert(1); }
-.header__logo svg { max-height: 32px !important; fill: #ffffff !important; stroke: none !important; }
+/* Logo — show Shopify logo as-is, no color filter */
+.header__logo img { max-height: 40px !important; width: auto; }
+.header__logo svg { max-height: 40px !important; }
 
 /* Nav links */
 .menu-list__link,
@@ -96,7 +97,7 @@ header-component .header-actions__action svg path[fill]:not([fill="none"]) {
   font-size: 0.75rem !important;
   letter-spacing: 0.04em !important;
   text-transform: none !important;
-  color: #ffffff !important;
+  color: #111111 !important;
 }
 
 .menu-list__link:hover {
@@ -107,8 +108,8 @@ header-component .header-actions__action svg path[fill]:not([fill="none"]) {
 /* Cart badge */
 .cart-count-bubble,
 [class*="cart-count"] {
-  background: #ffffff !important;
-  color: #a58db0 !important;
+  background: #111111 !important;
+  color: #ffffff !important;
   border-radius: 50% !important;
   font-size: 0.6rem !important;
 }
