@@ -1,6 +1,185 @@
+{% doc %}
+  @prompt
+    create a basic header with a hotdog menu my brand logo in the middle and checkout cart icon on the right
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-basic-header-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    margin: 0 auto;
+    background: {{ block.settings.background_color }};
+    color: {{ block.settings.text_color }};
+    border-bottom: 1px solid {{ block.settings.border_color }};
+  }
+
+  .ai-basic-header__inner-{{ ai_gen_id }} {
+    min-height: {{ block.settings.header_height }}px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 20px;
+    padding: 0 24px;
+  }
+
+  .ai-basic-header__menu-{{ ai_gen_id }},
+  .ai-basic-header__cart-{{ ai_gen_id }} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    color: {{ block.settings.text_color }};
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: {{ block.settings.control_radius }}px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .ai-basic-header__menu-{{ ai_gen_id }}:hover,
+  .ai-basic-header__cart-{{ ai_gen_id }}:hover,
+  .ai-basic-header__menu-{{ ai_gen_id }}:focus-visible,
+  .ai-basic-header__cart-{{ ai_gen_id }}:focus-visible {
+    border-color: {{ block.settings.text_color }};
+    outline: none;
+  }
+
+  .ai-basic-header__menu-{{ ai_gen_id }} {
+    justify-self: start;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .ai-basic-header__menu-{{ ai_gen_id }} span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: currentColor;
+  }
+
+  .ai-basic-header__logo-{{ ai_gen_id }} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    justify-self: center;
+    color: {{ block.settings.text_color }};
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .ai-basic-header__logo-{{ ai_gen_id }} img {
+    display: block;
+    width: auto;
+    max-width: 180px;
+    height: {{ block.settings.logo_height }}px;
+    object-fit: contain;
+  }
+
+  .ai-basic-header__cart-wrap-{{ ai_gen_id }} {
+    justify-self: end;
+    position: relative;
+  }
+
+  .ai-basic-header__cart-count-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 17px;
+    height: 17px;
+    padding: 0 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: {{ block.settings.badge_color }};
+    color: {{ block.settings.badge_text_color }};
+    font-size: 10px;
+    line-height: 1;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-basic-header__inner-{{ ai_gen_id }} {
+      min-height: {{ block.settings.mobile_header_height }}px;
+      padding: 0 12px;
+      gap: 8px;
+    }
+
+    .ai-basic-header__logo-{{ ai_gen_id }} img {
+      height: {{ block.settings.mobile_logo_height }}px;
+      max-width: 140px;
+    }
+  }
+{% endstyle %}
+
+<basic-header-{{ ai_gen_id }} class="ai-basic-header-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-basic-header__inner-{{ ai_gen_id }}">
+    <button class="ai-basic-header__menu-{{ ai_gen_id }}" type="button" aria-label="Open menu" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <a class="ai-basic-header__logo-{{ ai_gen_id }}" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }}">
+      {% if block.settings.logo != blank %}
+        <img src="{{ block.settings.logo | image_url: width: 360 }}" alt="{{ block.settings.logo.alt | default: shop.name | escape }}" loading="eager">
+      {% else %}
+        {{ shop.name | escape }}
+      {% endif %}
+    </a>
+
+    <div class="ai-basic-header__cart-wrap-{{ ai_gen_id }}">
+      <a class="ai-basic-header__cart-{{ ai_gen_id }}" href="{{ routes.cart_url }}" aria-label="View cart{% if cart.item_count > 0 %}, {{ cart.item_count }} items{% endif %}">
+        <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 8H6"></path>
+          <circle cx="10" cy="20" r="1"></circle>
+          <circle cx="18" cy="20" r="1"></circle>
+        </svg>
+        {% if cart.item_count > 0 %}<span class="ai-basic-header__cart-count-{{ ai_gen_id }}">{{ cart.item_count }}</span>{% endif %}
+      </a>
+    </div>
+  </div>
+</basic-header-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class BasicHeader{{ ai_gen_id }} extends HTMLElement {
+      connectedCallback() {
+        this.menuButton = this.querySelector('.ai-basic-header__menu-{{ ai_gen_id }}');
+        this.menuButton.addEventListener('click', function() {
+          var expanded = this.getAttribute('aria-expanded') === 'true';
+          this.setAttribute('aria-expanded', String(!expanded));
+        });
+      }
+    }
+    if (!customElements.get('basic-header-{{ ai_gen_id }}')) customElements.define('basic-header-{{ ai_gen_id }}', BasicHeader{{ ai_gen_id }});
+  })();
+</script>
+
 {% schema %}
- {
-   "name": "AI_Block",
-   "tag": "shopify-ai-generated-block"
- }
+{
+  "name": "Basic header",
+  "settings": [
+    { "type": "image_picker", "id": "logo", "label": "Brand logo" },
+    { "type": "range", "id": "desktop_width_percent", "label": "Desktop width", "min": 50, "max": 100, "step": 5, "unit": "%", "default": 100 },
+    { "type": "range", "id": "header_height", "label": "Header height", "min": 48, "max": 120, "step": 4, "unit": "px", "default": 72 },
+    { "type": "range", "id": "mobile_header_height", "label": "Mobile height", "min": 44, "max": 96, "step": 4, "unit": "px", "default": 60 },
+    { "type": "range", "id": "logo_height", "label": "Logo height", "min": 20, "max": 70, "step": 2, "unit": "px", "default": 36 },
+    { "type": "range", "id": "mobile_logo_height", "label": "Mobile logo height", "min": 18, "max": 56, "step": 2, "unit": "px", "default": 28 },
+    { "type": "range", "id": "control_radius", "label": "Control radius", "min": 0, "max": 24, "step": 2, "unit": "px", "default": 8 },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#FFFFFF" },
+    { "type": "color", "id": "text_color", "label": "Text and icons", "default": "#000000" },
+    { "type": "color", "id": "border_color", "label": "Border", "default": "#E6E6E6" },
+    { "type": "color", "id": "badge_color", "label": "Cart badge", "default": "#000000" },
+    { "type": "color", "id": "badge_text_color", "label": "Badge text", "default": "#FFFFFF" }
+  ],
+  "presets": [{ "name": "Basic header" }],
+  "tag": null,
+  "class": "basic-header-block"
+}
 {% endschema %}
