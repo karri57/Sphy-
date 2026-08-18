@@ -221,6 +221,8 @@
       if (document.querySelector('[data-template*="product"]')) {
         function kaInjectVip() {
           if (document.getElementById('ka-vip-line')) return;
+          /* Skip if ka-product section is present — VIP line already in Liquid */
+          if (document.querySelector('.kap__vip-line')) return;
           var priceEl = document.querySelector(
             '.price__regular .money, .price-item--regular, [class*="price-item"] .money, .price .money'
           );
@@ -288,6 +290,8 @@
 
         function kaInjectStar() {
           if (document.getElementById('ka-star-btn')) return;
+          /* Skip if the ka-product custom section is present — it has its own star */
+          if (document.querySelector('.kap__buy-row')) return;
           var atcBtn = document.querySelector(
             '.buy-buttons-block button[type="submit"], button[name="add"], [class*="add-to-cart-button"]:not(.quick-add__button)'
           );

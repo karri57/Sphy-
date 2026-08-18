@@ -94,7 +94,6 @@
       {%- unless product.has_only_default_variant -%}
         {%- for option in product.options_with_values -%}
           <div class="kap__option-group" data-option-pos="{{ option.position }}">
-            <p class="kap__option-name">{{ option.name }}</p>
             <div class="kap__option-btns" role="group" aria-label="{{ option.name }}">
               {%- for value in option.values -%}
                 {%- assign is_active = option.selected_value == value -%}
@@ -665,18 +664,14 @@
 /* ── Option buttons ───────────────────────────── */
 .kap__form { margin: 0; }
 
+/* Hide any quantity steppers the theme might inject into our form */
+.kap__form quantity-stepper,
+.kap__form .quantity-stepper,
+.kap__form [class*="quantity"],
+.kap__form [id*="quantity"] { display: none !important; }
+
 .kap__option-group {
   margin-bottom: 16px;
-}
-
-.kap__option-name {
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #111111;
-  margin: 0 0 8px;
 }
 
 .kap__option-btns {
