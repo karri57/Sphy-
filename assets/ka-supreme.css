@@ -54,34 +54,45 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
 /* ── Header ─────────────────────────────────────────────── */
 
-/* Clean white header with black icons */
-header-component,
+/* Solid state — white background, black icons (non-home pages + after scroll) */
 header-component .header__row {
   background: #ffffff !important;
   --color-background: #ffffff !important;
   --color-foreground: #111111 !important;
-  border-bottom: 1px solid #e8e8e8 !important;
+  border-bottom: 1px solid #e8e8e8;
 }
 
-/* All text, links, buttons — black */
 header-component a,
 header-component button,
 header-component span,
-header-component .header__heading,
 header-component .header__heading a,
 header-component .header-actions__action,
 header-component .header-actions__label {
   color: #111111 !important;
 }
 
-/* SVG icons — force black strokes/fills */
 header-component svg {
   stroke: #111111 !important;
   fill: none;
 }
-header-component svg[fill]:not([fill="none"]),
-header-component .header-actions__action svg path[fill]:not([fill="none"]) {
-  fill: #111111 !important;
+
+/* Transparent state — glass over hero, white icons */
+header-component[transparent] .header__row {
+  background: transparent !important;
+  border-bottom: none !important;
+}
+
+header-component[transparent] a,
+header-component[transparent] button,
+header-component[transparent] span,
+header-component[transparent] .header__heading a,
+header-component[transparent] .header-actions__action,
+header-component[transparent] .header-actions__label {
+  color: #ffffff !important;
+}
+
+header-component[transparent] svg {
+  stroke: #ffffff !important;
 }
 
 /* Logo — show Shopify logo as-is, no color filter */
@@ -97,7 +108,6 @@ header-component .header-actions__action svg path[fill]:not([fill="none"]) {
   font-size: 0.75rem !important;
   letter-spacing: 0.04em !important;
   text-transform: none !important;
-  color: #111111 !important;
 }
 
 .menu-list__link:hover {
