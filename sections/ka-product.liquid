@@ -244,6 +244,37 @@
   </div>
 </div>
 
+<!-- ──────────────────────────────── Shop the Look ── -->
+{%- if section.settings.stl_image_1 != blank or section.settings.stl_image_2 != blank -%}
+<div class="kap__stl">
+  <div class="kap__stl-hd">
+    <h2 class="kap__stl-title">SHOP THE LOOK</h2>
+    {%- if section.settings.stl_view_more != blank -%}
+      <a href="{{ section.settings.stl_view_more }}" class="kap__recs-more">
+        <svg width="14" height="10" viewBox="0 0 14 10" fill="none" stroke="currentColor" stroke-width="1.5">
+          <line x1="2" y1="5" x2="12" y2="5"/>
+          <polyline points="8 1 12 5 8 9"/>
+          <polyline points="5 1 1 5 5 9"/>
+        </svg>
+        VIEW MORE
+      </a>
+    {%- endif -%}
+  </div>
+  <div class="kap__stl-grid">
+    {%- if section.settings.stl_image_1 != blank -%}
+      <a href="{{ section.settings.stl_link_1 | default: '#' }}" class="kap__stl-item">
+        {{ section.settings.stl_image_1 | image_url: width: 800 | image_tag: class: 'kap__stl-img', loading: 'lazy', alt: 'Shop the Look' }}
+      </a>
+    {%- endif -%}
+    {%- if section.settings.stl_image_2 != blank -%}
+      <a href="{{ section.settings.stl_link_2 | default: '#' }}" class="kap__stl-item">
+        {{ section.settings.stl_image_2 | image_url: width: 800 | image_tag: class: 'kap__stl-img', loading: 'lazy', alt: 'Shop the Look' }}
+      </a>
+    {%- endif -%}
+  </div>
+</div>
+{%- endif -%}
+
 <!-- ──────────────────────────────── Sticky ATC ── -->
 <div class="kap__sticky" id="kap-sticky-{{ section.id }}">
   <button type="button" class="kap__sticky-atc" id="kap-sticky-atc-{{ section.id }}"
@@ -487,7 +518,7 @@
             : '';
           var price = '$' + (p.price / 100).toFixed(2).replace('.00', '');
           return '<a href="' + p.url + '" class="kap__rec">'
-            + '<div class="kap__rec-img-box">' + badge + img + '</div>'
+            + '<div class="kap__rec-img-box">' + badge + img + '<span class="kap__rec-qa" aria-hidden="true">+</span></div>'
             + '<p class="kap__rec-name">' + p.title + '</p>'
             + '<p class="kap__rec-price">' + price + '</p>'
             + '</a>';
@@ -1006,6 +1037,26 @@
 
 .kap__rec:hover .kap__rec-img { opacity: 0.85; }
 
+.kap__rec-qa {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  width: 26px;
+  height: 26px;
+  background: rgba(255,255,255,0.92);
+  border: 1px solid rgba(0,0,0,0.14);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: 300;
+  color: #111111;
+  line-height: 1;
+  pointer-events: none;
+}
+
 .kap__rec-badge {
   position: absolute;
   top: 7px;
@@ -1040,6 +1091,56 @@
   color: #888888;
   margin: 0;
 }
+
+/* ── Shop the Look ────────────────────────────── */
+.kap__stl {
+  background: #FFFFFF;
+  padding: 32px 16px 48px;
+  border-top: 1px solid rgba(0,0,0,0.08);
+}
+
+@media screen and (min-width: 750px) {
+  .kap__stl { padding: 40px 32px 64px; }
+}
+
+.kap__stl-hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.kap__stl-title {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: #111111;
+  margin: 0;
+}
+
+.kap__stl-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.kap__stl-item {
+  display: block;
+  text-decoration: none;
+  overflow: hidden;
+}
+
+.kap__stl-img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  display: block;
+  transition: opacity 0.2s;
+}
+
+.kap__stl-item:hover .kap__stl-img { opacity: 0.85; }
 
 /* ── Sticky ATC bar ───────────────────────────── */
 .kap__sticky {
@@ -1256,6 +1357,35 @@
       "id": "size_chart_image",
       "label": "Size chart image",
       "info": "Upload a size chart image. If left blank, a default measurement table is shown."
+    },
+    {
+      "type": "header",
+      "content": "Shop the Look"
+    },
+    {
+      "type": "image_picker",
+      "id": "stl_image_1",
+      "label": "Look 1 — image"
+    },
+    {
+      "type": "url",
+      "id": "stl_link_1",
+      "label": "Look 1 — link"
+    },
+    {
+      "type": "image_picker",
+      "id": "stl_image_2",
+      "label": "Look 2 — image"
+    },
+    {
+      "type": "url",
+      "id": "stl_link_2",
+      "label": "Look 2 — link"
+    },
+    {
+      "type": "url",
+      "id": "stl_view_more",
+      "label": "Shop the Look — View More link"
     },
     {
       "type": "header",

@@ -10,9 +10,21 @@
   {%- if section.settings.heading != blank -%}
     <div class="ka-pgrid__header">
       <h2 class="ka-pgrid__title">{{ section.settings.heading }}</h2>
-      {%- if section.settings.view_all_link != blank -%}
-        <a href="{{ section.settings.view_all_link }}" class="ka-pgrid__view-all">View All</a>
-      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  {%- if section.settings.view_all_link != blank or section.blocks.size > 0 -%}
+    <div class="ka-pgrid__filters-wrap">
+      <div class="ka-pgrid__filters">
+        {%- if section.settings.view_all_link != blank -%}
+          <a href="{{ section.settings.view_all_link }}" class="ka-pgrid__filter ka-pgrid__filter--all">View All</a>
+        {%- endif -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'filter' -%}
+            <a href="{{ block.settings.link }}" class="ka-pgrid__filter" {{ block.shopify_attributes }}>{{ block.settings.label }}</a>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
     </div>
   {%- endif -%}
 
@@ -48,9 +60,9 @@
           <div class="ka-pgrid__card-top">
             <div class="ka-pgrid__badge-wrap">
               {%- if is_sale -%}
-                <span class="ka-pgrid__badge ka-pgrid__badge--sale">Sale</span>
+                <span class="ka-pgrid__badge ka-pgrid__badge--sale">SALE</span>
               {%- elsif is_new -%}
-                <span class="ka-pgrid__badge ka-pgrid__badge--new">New In</span>
+                <span class="ka-pgrid__badge ka-pgrid__badge--new">NEW IN</span>
               {%- endif -%}
             </div>
             <button class="ka-pgrid__star" aria-label="Save {{ product.title | escape }}" type="button">
@@ -61,7 +73,7 @@
           </div>
 
           <!-- Image track: swipeable via CSS scroll-snap -->
-          <a href="{{ product.url }}" class="ka-pgrid__img-link" aria-label="{{ product.title | escape }}">
+          <a href="{{ product.url }}" class="ka-pgrid__img-link" aria-label="{{ product.title | escape }}" tabindex="-1">
             <div class="ka-pgrid__img-track">
               {%- if product.images != blank -%}
                 {%- for img in product.images limit: 4 -%}
@@ -86,12 +98,29 @@
             </div>
           </a>
 
-          <!-- Image dots — always render to keep all card heights equal -->
-          <div class="ka-pgrid__cdots" aria-hidden="true">
-            {%- assign dot_count = product.images.size | at_least: 1 | at_most: 4 -%}
-            {%- for i in (1..dot_count) -%}
-              <span class="ka-pgrid__cdot{% if forloop.first %} is-act{% endif %}"></span>
-            {%- endfor -%}
+          <!-- Card bottom: quick-add "+" (left) + image dots (right) -->
+          <div class="ka-pgrid__card-btm">
+            {%- if product.variants.size == 1 -%}
+              {%- form 'product', product, class: 'ka-pgrid__qa-form' -%}
+                <input type="hidden" name="id" value="{{ first_variant.id }}">
+                <input type="hidden" name="quantity" value="1">
+                <button
+                  type="submit"
+                  class="ka-pgrid__qa"
+                  aria-label="Add {{ product.title | escape }} to cart"
+                  {%- unless first_variant.available %} disabled{%- endunless -%}
+                >+</button>
+              {%- endform -%}
+            {%- else -%}
+              <a href="{{ product.url }}" class="ka-pgrid__qa" aria-label="Select options for {{ product.title | escape }}">+</a>
+            {%- endif -%}
+
+            <div class="ka-pgrid__cdots" aria-hidden="true">
+              {%- assign dot_count = product.images.size | at_least: 1 | at_most: 4 -%}
+              {%- for i in (1..dot_count) -%}
+                <span class="ka-pgrid__cdot{% if forloop.first %} is-act{% endif %}"></span>
+              {%- endfor -%}
+            </div>
           </div>
 
         </div><!-- /.ka-pgrid__card -->
@@ -101,31 +130,14 @@
           <a href="{{ product.url }}" class="ka-pgrid__name-link">
             <p class="ka-pgrid__name">{{ product.title | truncate: 30 }}</p>
           </a>
-          <div class="ka-pgrid__btm-row">
-            <p class="ka-pgrid__price">
-              {%- if is_sale -%}
-                <span class="ka-pgrid__price-sale">{{ product.price | money }}</span>
-                <span class="ka-pgrid__price-compare">{{ product.compare_at_price | money }}</span>
-              {%- else -%}
-                {{ product.price | money }}
-              {%- endif -%}
-            </p>
-            {%- if product.variants.size == 1 -%}
-              {%- form 'product', product, class: 'ka-pgrid__atc-form' -%}
-                <input type="hidden" name="id" value="{{ first_variant.id }}">
-                <input type="hidden" name="quantity" value="1">
-                <button
-                  type="submit"
-                  class="ka-pgrid__atc-btn"
-                  aria-label="Add {{ product.title | escape }} to cart"
-                  {%- unless first_variant.available %} disabled{%- endunless -%}
-                >ADD TO CART</button>
-              {%- endform -%}
+          <p class="ka-pgrid__price">
+            {%- if is_sale -%}
+              <span class="ka-pgrid__price-sale">{{ product.price | money }}</span>
+              <span class="ka-pgrid__price-compare">{{ product.compare_at_price | money }}</span>
             {%- else -%}
-              <a href="{{ product.url }}" class="ka-pgrid__atc-btn">ADD TO CART</a>
+              {{ product.price | money }}
             {%- endif -%}
-          </div>
-
+          </p>
           {%- if color_index != nil -%}
             <div class="ka-pgrid__swatches" aria-label="Available colors">
               {%- assign seen = '' -%}
@@ -139,7 +151,6 @@
               {%- endfor -%}
             </div>
           {%- endif -%}
-
         </div>
       </div><!-- /.ka-pgrid__item -->
 
@@ -152,14 +163,12 @@
 {% stylesheet %}
   .ka-pgrid {
     background: #FFFFFF;
-    padding: 32px 16px 72px;
+    padding: 24px 0 64px;
   }
 
   .ka-pgrid__header {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    margin-bottom: 20px;
+    padding: 0 12px;
+    margin-bottom: 12px;
   }
 
   .ka-pgrid__title {
@@ -171,34 +180,70 @@
     margin: 0;
   }
 
-  .ka-pgrid__view-all {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 0.72rem;
-    color: #111111;
-    text-decoration: underline;
-    text-underline-offset: 2px;
+  /* ── Filter tabs ──────────────────────────── */
+  .ka-pgrid__filters-wrap {
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    margin-bottom: 16px;
   }
 
-  /* ── Grid ─────────────────────────────────────── */
+  .ka-pgrid__filters-wrap::-webkit-scrollbar { display: none; }
+
+  .ka-pgrid__filters {
+    display: flex;
+    padding: 0 12px;
+    min-width: max-content;
+  }
+
+  .ka-pgrid__filter {
+    display: inline-block;
+    padding: 10px 14px;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: #888888;
+    text-decoration: none;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color 0.15s, border-color 0.15s;
+  }
+
+  .ka-pgrid__filter--all {
+    color: #111111;
+    font-weight: 700;
+    border-bottom-color: #111111;
+    padding-left: 0;
+  }
+
+  .ka-pgrid__filter:hover { color: #111111; text-decoration: none; }
+
+  /* ── Grid ──────────────────────────────────── */
   .ka-pgrid__inner {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    column-gap: 10px;
-    row-gap: 28px;
+    column-gap: 8px;
+    row-gap: 24px;
+    padding: 0 8px;
     max-width: 1280px;
     margin: 0 auto;
   }
 
   @media screen and (min-width: 750px) {
-    .ka-pgrid { padding: 40px 32px 96px; }
+    .ka-pgrid { padding: 32px 0 80px; }
+    .ka-pgrid__header { padding: 0 16px; margin-bottom: 12px; }
+    .ka-pgrid__filters { padding: 0 16px; }
     .ka-pgrid__inner {
       grid-template-columns: repeat(4, 1fr);
-      column-gap: 16px;
-      row-gap: 36px;
+      column-gap: 10px;
+      row-gap: 28px;
+      padding: 0 16px;
     }
   }
 
-  /* ── Card ─────────────────────────────────────── */
+  /* ── Card ──────────────────────────────────── */
   .ka-pgrid__item {
     display: flex;
     flex-direction: column;
@@ -211,7 +256,7 @@
     flex-direction: column;
   }
 
-  /* ── Badge + star overlay ─────────────────────── */
+  /* ── Badge + star (top overlay, absolute) ─── */
   .ka-pgrid__card-top {
     display: flex;
     align-items: flex-start;
@@ -225,14 +270,14 @@
     pointer-events: none;
   }
 
-  .ka-pgrid__badge-wrap { min-height: 18px; }
+  .ka-pgrid__badge-wrap { min-height: 16px; }
 
   .ka-pgrid__badge {
     display: inline-block;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 0.58rem;
+    font-size: 0.55rem;
     font-weight: 700;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     line-height: 1;
   }
@@ -254,7 +299,7 @@
 
   .ka-pgrid__star:hover { color: #111111; }
 
-  /* ── Image track (swipeable) ───────────────────── */
+  /* ── Image track (swipeable) ───────────────── */
   .ka-pgrid__img-link {
     display: block;
     text-decoration: none;
@@ -290,13 +335,45 @@
 
   .ka-pgrid__img-link:hover .ka-pgrid__img { opacity: 0.85; }
 
-  /* ── Card image dots ──────────────────────────── */
+  /* ── Card bottom: quick-add + dots ──────────── */
+  .ka-pgrid__card-btm {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 8px 10px;
+  }
+
+  .ka-pgrid__qa-form { margin: 0; padding: 0; line-height: 1; flex-shrink: 0; }
+
+  .ka-pgrid__qa {
+    width: 28px;
+    height: 28px;
+    background: rgba(255,255,255,0.92);
+    border: 1px solid rgba(0,0,0,0.14);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 1.1rem;
+    font-weight: 300;
+    line-height: 1;
+    cursor: pointer;
+    color: #111111 !important;
+    text-decoration: none !important;
+    padding: 0;
+    flex-shrink: 0;
+    transition: background 0.15s;
+    -webkit-appearance: none;
+  }
+
+  .ka-pgrid__qa:hover:not([disabled]) { background: #FFFFFF; }
+  .ka-pgrid__qa[disabled] { opacity: 0.35; cursor: not-allowed; }
+
   .ka-pgrid__cdots {
     display: flex;
-    justify-content: center;
     gap: 4px;
-    padding: 8px 0 10px;
-    pointer-events: none;
+    align-items: center;
   }
 
   .ka-pgrid__cdot {
@@ -310,7 +387,7 @@
 
   .ka-pgrid__cdot.is-act { background: #111111; }
 
-  /* ── Info below card ──────────────────────────── */
+  /* ── Info below card ──────────────────────── */
   .ka-pgrid__info {
     margin-top: 8px;
     padding: 0 2px;
@@ -320,7 +397,7 @@
     display: block;
     text-decoration: none;
     color: inherit;
-    margin-bottom: 5px;
+    margin-bottom: 4px;
   }
 
   .ka-pgrid__name {
@@ -332,74 +409,18 @@
     line-height: 1.35;
   }
 
-  /* ── Price row + ATC ──────────────────────────── */
-  .ka-pgrid__btm-row {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-    margin-bottom: 6px;
-  }
-
-  @media screen and (min-width: 750px) {
-    .ka-pgrid__btm-row {
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-    }
-  }
-
   .ka-pgrid__price {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 0.75rem;
     font-weight: 400;
     color: #111111;
-    margin: 0;
-    flex-shrink: 0;
+    margin: 0 0 4px;
   }
 
   .ka-pgrid__price-sale { color: #CC0000; margin-right: 3px; }
-  .ka-pgrid__price-compare { color: #999; text-decoration: line-through; }
+  .ka-pgrid__price-compare { color: #999999; text-decoration: line-through; }
 
-  .ka-pgrid__atc-form { margin: 0; padding: 0; line-height: 1; width: 100%; }
-
-  @media screen and (min-width: 750px) {
-    .ka-pgrid__atc-form { width: auto; }
-  }
-
-  .ka-pgrid__atc-btn {
-    display: flex;
-    width: 100%;
-    align-items: center;
-    justify-content: center;
-    background: #111111;
-    color: #FFFFFF !important;
-    border: none;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 0.62rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 10px 12px;
-    cursor: pointer;
-    text-decoration: none !important;
-    white-space: nowrap;
-    -webkit-appearance: none;
-    transition: background 0.15s;
-    line-height: 1;
-  }
-
-  @media screen and (min-width: 750px) {
-    .ka-pgrid__atc-btn {
-      width: auto;
-      flex-shrink: 0;
-    }
-  }
-
-  .ka-pgrid__atc-btn:hover:not([disabled]) { background: #333333; color: #FFFFFF !important; text-decoration: none !important; }
-  .ka-pgrid__atc-btn[disabled] { opacity: 0.38; cursor: not-allowed; }
-
-  /* ── Color swatches ───────────────────────────── */
+  /* ── Swatches ─────────────────────────────── */
   .ka-pgrid__swatches {
     display: flex;
     gap: 4px;
@@ -416,7 +437,7 @@
     flex-shrink: 0;
   }
 
-  /* ── Empty state ──────────────────────────────── */
+  /* ── Empty ────────────────────────────────── */
   .ka-pgrid__empty {
     grid-column: 1 / -1;
     text-align: center;
@@ -455,6 +476,25 @@
       "max": 48,
       "step": 2,
       "default": 8
+    }
+  ],
+  "blocks": [
+    {
+      "type": "filter",
+      "name": "Filter Tab",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Tab label",
+          "default": "Category"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Tab link"
+        }
+      ]
     }
   ],
   "presets": [
