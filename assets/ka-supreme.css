@@ -76,9 +76,13 @@ header-component svg {
   fill: none;
 }
 
-/* Transparent state — glass over hero, white icons */
+/* Transparent state — dark glass strip over hero so header is visible */
+header-component[transparent] {
+  --header-logo-display: block; /* always show regular logo even in transparent mode */
+}
+
 header-component[transparent] .header__row {
-  background: transparent !important;
+  background: rgba(0, 0, 0, 0.32) !important;
   border-bottom: none !important;
 }
 
