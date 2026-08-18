@@ -144,7 +144,7 @@
 
     <p class="kap__model">
       <strong>{{ section.settings.model_label | default: 'The models are wearing:' }}</strong>
-      {% if section.settings.model_info != blank %}{{ section.settings.model_info }}{% else %}<em class="kap__model-hint">Add model info in theme editor → Product section settings</em>{% endif %}
+      {% if section.settings.model_info != blank %} {{ section.settings.model_info }}{% else %} <em class="kap__model-hint">Add model info in theme editor → Product section settings</em>{% endif %}
     </p>
 
     <!-- Accordions -->
@@ -600,7 +600,7 @@
     grid-template-columns: 1fr 1fr;
     align-items: start;
   }
-  .kap__gallery { position: sticky; top: 0; }
+  .kap__gallery { position: sticky; top: var(--header-height, 0px); }
   .kap__info { padding: 32px 32px 80px; }
 }
 
@@ -654,6 +654,11 @@
   color: #888888;
   margin: 0;
   line-height: 1.4;
+}
+
+.kap__vip-line strong {
+  color: #111111;
+  font-weight: 700;
 }
 
 .kap__vip-a {
