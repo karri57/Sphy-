@@ -53,9 +53,39 @@ a { color: var(--ka-ink); text-decoration: none; }
 a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
 /* ── Header ─────────────────────────────────────────────── */
-/* Tinker renders header as <header-component id="header-component">.
-   We let Tinker handle its own background/transparency logic.
-   Only override nav link fonts and ensure logo max-height. */
+
+/* Purple brand header — Cold Culture style */
+header-component,
+header-component .header__row {
+  background: #a58db0 !important;
+  --color-background: #a58db0 !important;
+  --color-foreground: #ffffff !important;
+}
+
+/* Make all header text, links, buttons white */
+header-component a,
+header-component button,
+header-component span,
+header-component .header__heading,
+header-component .header__heading a,
+header-component .header-actions__action,
+header-component .header-actions__label {
+  color: #ffffff !important;
+}
+
+/* SVG icons — Tinker uses stroke and fill both depending on icon */
+header-component svg {
+  stroke: #ffffff !important;
+  fill: none;
+}
+header-component svg[fill]:not([fill="none"]),
+header-component .header-actions__action svg path[fill]:not([fill="none"]) {
+  fill: #ffffff !important;
+}
+
+/* Logo: invert dark logos to white automatically; upload white logo to skip */
+.header__logo img { filter: brightness(0) invert(1); }
+.header__logo svg { max-height: 32px !important; fill: #ffffff !important; stroke: none !important; }
 
 /* Nav links */
 .menu-list__link,
@@ -66,7 +96,7 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
   font-size: 0.75rem !important;
   letter-spacing: 0.04em !important;
   text-transform: none !important;
-  color: inherit !important;
+  color: #ffffff !important;
 }
 
 .menu-list__link:hover {
@@ -74,19 +104,12 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
   text-underline-offset: 3px;
 }
 
-/* Logo */
-.header__logo img,
-.header__logo svg { max-height: 32px !important; }
-
-/* Cart icon */
-.header-actions__action svg { stroke: currentColor; }
-
 /* Cart badge */
 .cart-count-bubble,
 [class*="cart-count"] {
-  background: var(--ka-ink) !important;
-  color: var(--ka-white) !important;
-  border-radius: 0 !important;
+  background: #ffffff !important;
+  color: #a58db0 !important;
+  border-radius: 50% !important;
   font-size: 0.6rem !important;
 }
 
